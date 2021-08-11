@@ -12,6 +12,8 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import {useState} from 'react'
+import Image from 'next/image'
+import Logo from '../../public/loman.svg'
 
 const SignIn = () => {
   const [show, setShow] = useState(false)
@@ -26,6 +28,8 @@ const SignIn = () => {
         align="stretch"
         spacing="2rem"
       >
+        <Image src={Logo} alt="Loman logo" />
+
         <Heading>Sign In</Heading>
 
         <VStack spacing="1.25rem" align="stretch">
@@ -49,8 +53,8 @@ const SignIn = () => {
 
         <Button colorScheme="green">Sign In</Button>
 
-        <Center>
-          <Text>{"Doesn't have an account yet?"}</Text>
+        <Center alignSelf="stretch">
+          <Text mr="0.5rem">{"Doesn't have an account yet?"}</Text>
           <Link href="/sign-up">Sign Up</Link>
         </Center>
       </VStack>
