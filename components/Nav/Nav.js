@@ -1,6 +1,16 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import {Button, Grid, List, ListItem} from '@chakra-ui/react'
+import {
+  Avatar,
+  Button,
+  Grid,
+  List,
+  ListItem,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react'
 
 // import Logo from '@public/static/Loman.png'
 
@@ -28,13 +38,32 @@ const Nav = () => {
         </List>
       </Grid>
 
-      <Grid autoFlow="column dense" gridAutoColumns="min-content" gap="4">
-        <Link href="#" passHref={true}>
-          <Button colorScheme="green" variant="solid" as="a">
-            Sign In
-          </Button>
-        </Link>
-      </Grid>
+      <Menu placement="bottom-end">
+        <MenuButton>
+          <Avatar size="sm" />
+        </MenuButton>
+        <MenuList>
+          <MenuItem>
+            <Link href="#" passHref={true}>
+              <Button
+                colorScheme="green"
+                variant="outline"
+                as="a"
+                width="100%"
+              >
+                Sign Up
+              </Button>
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link href="#" passHref={true}>
+              <Button colorScheme="green" variant="solid" as="a" width="100%">
+                Sign In
+              </Button>
+            </Link>
+          </MenuItem>
+        </MenuList>
+      </Menu>
     </Grid>
   )
 }

@@ -1,20 +1,39 @@
-import {render, screen} from '@testing-library/react'
+import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import Nav from './Nav'
 
 describe('Unregistred User Nav', () => {
-  it('should render a sign in link and list menu', () => {
+  it('should render a navbar with avatar and list menu', () => {
     render(<Nav />)
 
-    expect(
-      screen.getByRole('link', {
-        name: /sign in/i,
-      }),
-    ).toBeInTheDocument()
+    const signInText = screen.getByText(/sign in/i)
+    const avatarButton = screen.getByRole('button', {
+      name: /avatar/i,
+    })
 
     expect(
       screen.getByRole('link', {
         name: /fundraising/i,
       }),
     ).toBeInTheDocument()
+    expect(signInText).not.toBeVisible()
+
+    expect(avatarButton).toBeVisible()
+  })
+
+  it('should appear menu when avatar button is clicked', async () => {
+    render(<Nav />)
+
+    const signInText = screen.getByText(/sign in/i)
+    const avatarButton = screen.getByRole('button', {
+      name: /avatar/i,
+    })
+
+    expect(signInText).not.toBeVisible()
+
+    fireEvent.click(avatarButton)
+
+    await waitFor(() => {
+      expect(signInText).toBeVisible()
+    })
   })
 })
