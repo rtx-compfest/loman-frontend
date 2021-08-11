@@ -18,49 +18,42 @@ const SignIn = () => {
 
   return (
     <Layout>
-      <Box
+      <VStack
         boxShadow="md"
         borderRadius="0.5rem"
         px="1.5rem"
         py="2rem"
-        my="auto"
+        align="stretch"
+        spacing="2rem"
       >
-        <Heading mb="2.5rem" mt="2rem">
-          Sign In
-        </Heading>
+        <Heading>Sign In</Heading>
 
-        <VStack spacing="2rem" align="stretch">
-          <VStack spacing="1.25rem" align="stretch">
-            <Box>
-              <Text>Email</Text>
-              <Input />
-            </Box>
+        <VStack spacing="1.25rem" align="stretch">
+          <Box>
+            <Text>Email</Text>
+            <Input />
+          </Box>
 
-            <Box>
-              <Text>Password</Text>
-              <InputGroup>
-                <Input pr="4.5rem" type={show ? 'text' : 'password'} />
-                <InputRightElement width="4.5rem">
-                  <Button
-                    h="1.75rem"
-                    size="sm"
-                    onClick={() => setShow(!show)}
-                  >
-                    {show ? 'Hide' : 'Show'}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-            </Box>
-          </VStack>
-
-          <Button colorScheme="green">Sign In</Button>
-
-          <Center>
-            <Text>{"Doesn't have an account yet?"}</Text>
-            <Link href="/sign-up">Sign Up</Link>
-          </Center>
+          <Box>
+            <Text>Password</Text>
+            <InputGroup>
+              <Input pr="4.5rem" type={show ? 'text' : 'password'} />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
+                  {show ? 'Hide' : 'Show'}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </Box>
         </VStack>
-      </Box>
+
+        <Button colorScheme="green">Sign In</Button>
+
+        <Center>
+          <Text>{"Doesn't have an account yet?"}</Text>
+          <Link href="/sign-up">Sign Up</Link>
+        </Center>
+      </VStack>
     </Layout>
   )
 }
