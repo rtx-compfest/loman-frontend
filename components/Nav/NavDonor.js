@@ -16,6 +16,7 @@ import {
 
 import Nav from './Nav'
 import {Logout} from '@components/Button'
+import {PlusIcon} from '@heroicons/react/outline'
 
 const NavDonor = ({name, balance = 0}) => {
   return (
@@ -35,21 +36,7 @@ const NavDonor = ({name, balance = 0}) => {
       <Grid autoFlow="column dense" gap="4" alignItems="center">
         <Link href="#" passHref={true}>
           <Button
-            leftIcon={
-              <Icon
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                boxSize="5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </Icon>
-            }
+            leftIcon={<Icon boxSize="4" as={PlusIcon} />}
             colorScheme="green"
             variant="solid"
             as="a"
