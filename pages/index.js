@@ -1,7 +1,16 @@
 import Head from 'next/head'
-import {Container} from '@chakra-ui/react'
+import {Container, Grid, Heading} from '@chakra-ui/react'
 
-import {NavAdmin} from '@components/Nav'
+import {NavUser} from '@components/Nav'
+import {DonationCard} from '@components/Card'
+
+const donation = {
+  name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
+  target_amount: 500000000,
+  amount: 18584332,
+  deadline: 141,
+  fundraiser: 'Kitabisa.com',
+}
 
 export default function Home() {
   return (
@@ -13,8 +22,19 @@ export default function Home() {
       </Head>
 
       <header>
-        <NavAdmin />
+        <NavUser />
       </header>
+
+      <Grid as="main" marginBlock="85px" gap="8">
+        <Heading size="xl">Fundraising</Heading>
+        <Grid
+          templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+          gap="10"
+        >
+          <DonationCard />
+          <DonationCard {...donation} />
+        </Grid>
+      </Grid>
     </Container>
   )
 }

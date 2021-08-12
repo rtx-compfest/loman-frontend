@@ -2,10 +2,55 @@ import {render, screen} from '@testing-library/react'
 import DonationCard from './DonationCard'
 
 describe('DonationCard', () => {
-  it('should render DonationCard', () => {
+  it("should render DonationCard when props it's empty", () => {
     render(<DonationCard />)
 
-    const title = screen.getByText(/donation name/i)
+    const img = screen.getByRole('img', {
+      name: /alt image/i,
+    })
+    const title = screen.getByRole('heading', {
+      name: /donation name/i,
+    })
+    const fundraiser = screen.getByText(/fundraiser/i)
+    const terkumpul = screen.getByText(/terkumpul/i)
+    const sisaHari = screen.getByText(/sisa hari/i)
+
+    expect(img).toBeInTheDocument()
     expect(title).toBeInTheDocument()
+    expect(fundraiser).toBeInTheDocument()
+    expect(terkumpul).toBeInTheDocument()
+    expect(sisaHari).toBeInTheDocument()
+  })
+
+  it('should render DonationCard according to props', () => {
+    const donation = {
+      name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
+      target_amount: 500000000,
+      amount: 18584332,
+      deadline: 141,
+      fundraiser: 'Kitabisa.com',
+    }
+
+    render(<DonationCard {...donation} />)
+
+    const img = screen.getByRole('img', {
+      name: /alt image/i,
+    })
+    const title = screen.getByRole('heading', {
+      name: donation.name,
+    })
+    const fundraiser = screen.getByText(donation.fundraiser)
+    const terkumpul = screen.getByText(/terkumpul/i)
+    const amount = screen.getByText(`Rp ${donation.amount}`)
+    const sisaHari = screen.getByText(/sisa hari/i)
+    const deadline = screen.getByText(donation.deadline)
+
+    expect(img).toBeInTheDocument()
+    expect(title).toBeInTheDocument()
+    expect(fundraiser).toBeInTheDocument()
+    expect(terkumpul).toBeInTheDocument()
+    expect(amount).toBeInTheDocument()
+    expect(sisaHari).toBeInTheDocument()
+    expect(deadline).toBeInTheDocument()
   })
 })

@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import {Grid, Progress, Text, VStack, HStack} from '@chakra-ui/react'
+import {Grid, Heading, Icon, Progress, Text} from '@chakra-ui/react'
+import {BadgeCheckIcon} from '@heroicons/react/solid'
 
 const imgLoader = ({src}) => {
   return src
@@ -9,18 +10,24 @@ const DonationCard = ({
   name = 'Donation name',
   fundraiser = 'Fundraiser',
   amount = 0,
-  target_amount = 0,
+  target_amount = 100,
   deadline = 0,
-}) => {
-  const image = {
+  image = {
     src: 'https://via.placeholder.com/280x155?text=Donation+Image',
     alt: 'Alt Image',
     width: 280,
     height: 155,
-  }
-
+  },
+}) => {
   return (
-    <VStack spacing="3" padding="4">
+    <Grid
+      gap="3"
+      p={5}
+      shadow="md"
+      borderWidth="1px"
+      borderRadius="6"
+      textAlign="left"
+    >
       <Image
         loader={imgLoader}
         src={image.src}
@@ -28,32 +35,50 @@ const DonationCard = ({
         width={image.width}
         height={image.height}
       />
-      <Text as="strong" size="6">
+      <Heading as="h4" size="md">
         {name}
-      </Text>
-      <Text as="strong" size="4">
-        {fundraiser}
-      </Text>
-      <Progress colorScheme="green" value={amount / target_amount} size="s" />
+      </Heading>
+      <Grid
+        autoFlow="column dense"
+        autoColumns="min-content min-content"
+        gap="2"
+        alignItems="center"
+      >
+        <Text as="strong" size="md" color="gray.700" width="min-content">
+          {fundraiser}
+        </Text>
+        <Icon as={BadgeCheckIcon} fill="blue.400" boxSize="5" />
+      </Grid>
+      <Progress
+        colorScheme="green"
+        value={amount}
+        max={target_amount}
+        size="sm"
+        borderRadius="3"
+      />
       <Grid
         autoFlow="column dense"
         alignItems="center"
         justifyContent="space-between"
       >
-        <HStack spacing="1">
-          <Text size="3">Terkumpul</Text>
-          <Text as="strong" size="4">
-            {amount}
+        <Grid spacing="1">
+          <Text fontSize="sm" color="gray.600">
+            Terkumpul
           </Text>
-        </HStack>
-        <HStack textAlign="right">
-          <Text size="3">Sisa hari</Text>
-          <Text as="strong" size="4">
+          <Text as="strong" fontSize="lg" color="green">
+            Rp {amount}
+          </Text>
+        </Grid>
+        <Grid textAlign="right" gap="1">
+          <Text fontSize="sm" color="gray.600">
+            Sisa hari
+          </Text>
+          <Text as="strong" fontSize="lg" color="gray.700">
             {deadline}
           </Text>
-        </HStack>
+        </Grid>
       </Grid>
-    </VStack>
+    </Grid>
   )
 }
 
