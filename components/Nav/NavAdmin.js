@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 import Nav from './Nav'
-import {Logout} from '@components/Button'
+import {LogoutButton} from '@components/Button'
 
 const NavAdmin = () => {
   return (
@@ -54,7 +54,7 @@ const NavAdmin = () => {
             </Link>
           </MenuItem>
           <MenuItem as="div">
-            <Logout />
+            <LogoutButton />
           </MenuItem>
         </MenuList>
       </Menu>

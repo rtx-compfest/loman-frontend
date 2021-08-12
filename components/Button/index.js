@@ -1,3 +1,3 @@
-import Logout from './Logout'
+import LogoutButton from './LogoutButton'
 
-export {Logout}
+export {LogoutButton}

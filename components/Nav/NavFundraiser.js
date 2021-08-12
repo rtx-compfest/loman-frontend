@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 
 import Nav from './Nav'
-import {Logout} from '@components/Button'
+import {LogoutButton} from '@components/Button'
 import {CashIcon} from '@heroicons/react/outline'
 
 const NavFundraiser = ({name, balance = 0}) => {
@@ -88,7 +88,7 @@ const NavFundraiser = ({name, balance = 0}) => {
               </Link>
             </MenuItem>
             <MenuItem as="div">
-              <Logout />
+              <LogoutButton />
             </MenuItem>
           </MenuList>
         </Menu>

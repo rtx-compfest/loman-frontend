@@ -1,7 +1,7 @@
 import {Button, Icon} from '@chakra-ui/react'
 import {LogoutIcon} from '@heroicons/react/outline'
 
-const Logout = ({props}) => {
+const LogoutButton = ({props}) => {
   return (
     <Button
       width="100%"
@@ -17,4 +17,4 @@ const Logout = ({props}) => {
   )
 }
 
-export default Logout
+export default LogoutButton
