@@ -1,7 +1,7 @@
 import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import NavUser from './NavUser'
 
-describe('User Nav', () => {
+describe('NavUser', () => {
   it('should render a navbar with avatar button and list menu', () => {
     render(<NavUser />)
 
