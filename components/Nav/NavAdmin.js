@@ -10,10 +10,10 @@ import {
   MenuItem,
   Grid,
   Text,
-  Icon,
 } from '@chakra-ui/react'
 
 import Nav from './Nav'
+import {Logout} from '@components/Button'
 
 const NavAdmin = () => {
   return (
@@ -53,33 +53,8 @@ const NavAdmin = () => {
               <a>Profile</a>
             </Link>
           </MenuItem>
-          <MenuItem>
-            <Grid
-              width="100%"
-              background="white"
-              padding="2"
-              border="1px"
-              borderColor="gray.300"
-              borderRadius="3"
-              justifyContent="space-between"
-              autoFlow="column dense"
-              alignItems="center"
-            >
-              Log out
-              <Icon
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="gray.400"
-                boxSize="5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </Icon>
-            </Grid>
+          <MenuItem as="div">
+            <Logout />
           </MenuItem>
         </MenuList>
       </Menu>
