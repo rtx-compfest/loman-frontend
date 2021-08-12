@@ -2,7 +2,7 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import NavDonor from './NavDonor'
 
 describe('NavDonor', () => {
-  it('should render a navbar with avatar button and list menu', () => {
+  it('should render a navbar with top up button, avatar button and list menu', () => {
     render(<NavDonor />)
 
     const logoutText = screen.getByText(/log out/i)
@@ -12,8 +12,10 @@ describe('NavDonor', () => {
     const linkFundraising = screen.getByRole('link', {
       name: /fundraising/i,
     })
+    const linkTopUp = screen.getByRole('link', {name: /top up/i})
 
     expect(linkFundraising).toBeInTheDocument()
+    expect(linkTopUp).toBeInTheDocument()
     expect(logoutText).not.toBeVisible()
     expect(avatarButton).toBeVisible()
   })
