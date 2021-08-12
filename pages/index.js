@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import {Container} from '@chakra-ui/react'
 
-import {NavUser} from '@components/Nav'
+import {NavFundraiser} from '@components/Nav'
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       </Head>
 
       <header>
-        <NavUser />
+        <NavFundraiser />
       </header>
     </Container>
   )
