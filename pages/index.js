@@ -8,7 +8,7 @@ const donation = {
   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
   target_amount: 500000000,
   amount: 18584332,
-  deadline: 141,
+  deadline: '2021-08-31',
   fundraiser: 'Kitabisa.com',
 }
 

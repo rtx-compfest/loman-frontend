@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import {Grid, Heading, Icon, Progress, Text} from '@chakra-ui/react'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
+import differenceInDays from 'date-fns/differenceInDays'
 
 const imgLoader = ({src}) => {
   return src
@@ -74,7 +75,7 @@ const DonationCard = ({
             Sisa hari
           </Text>
           <Text as="strong" fontSize="lg" color="gray.700">
-            {deadline}
+            {differenceInDays(new Date(deadline), new Date())}
           </Text>
         </Grid>
       </Grid>

@@ -1,4 +1,5 @@
 import {render, screen} from '@testing-library/react'
+import differenceInDays from 'date-fns/differenceInDays'
 import DonationCard from './DonationCard'
 
 describe('DonationCard', () => {
@@ -27,7 +28,7 @@ describe('DonationCard', () => {
       name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
       target_amount: 500000000,
       amount: 18584332,
-      deadline: 141,
+      deadline: '2021-08-31',
       fundraiser: 'Kitabisa.com',
     }
 
@@ -43,7 +44,9 @@ describe('DonationCard', () => {
     const terkumpul = screen.getByText(/terkumpul/i)
     const amount = screen.getByText(`Rp ${donation.amount}`)
     const sisaHari = screen.getByText(/sisa hari/i)
-    const deadline = screen.getByText(donation.deadline)
+    const deadline = screen.getByText(
+      differenceInDays(new Date(donation.deadline), new Date()),
+    )
 
     expect(img).toBeInTheDocument()
     expect(title).toBeInTheDocument()
