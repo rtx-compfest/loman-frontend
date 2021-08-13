@@ -1,4 +1,4 @@
-import {Layout} from '@components/layout'
+import {Layout} from '@components/Layout'
 import {
   Box,
   Button,
@@ -159,7 +159,7 @@ const SignUp = () => {
 
         <Center alignSelf="stretch">
           <Text mr="0.5rem">Already have an account?</Text>
-          <Link href="/sign-in">Sign In</Link>
+          <Link href={'/sign-in'}>Sign In</Link>
         </Center>
       </VStack>
     </Layout>
