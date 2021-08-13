@@ -21,5 +21,9 @@ module.exports = {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@components(.*)$': '<rootDir>/components$1',
     '^@public(.*)$': '<rootDir>/public$1',
+    '^@lib(.*)$': '<rootDir>/lib$1',
+    '^@style(.*)$': '<rootDir>/style$1',
+    '^@pages(.*)$': '<rootDir>/pages$1',
+    '^@hooks(.*)$': '<rootDir>/hooks$1',
   },
 }

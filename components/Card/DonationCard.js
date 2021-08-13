@@ -2,6 +2,7 @@ import Image from 'next/image'
 import {Grid, Heading, Icon, Progress, Text} from '@chakra-ui/react'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
 import differenceInDays from 'date-fns/differenceInDays'
+import formatCurrency from '@lib/formatCurrency'
 
 const imgLoader = ({src}) => {
   return src
@@ -67,7 +68,7 @@ const DonationCard = ({
             Terkumpul
           </Text>
           <Text as="strong" fontSize="lg" color="green">
-            Rp {amount}
+            {formatCurrency(amount).slice(0, -3)}
           </Text>
         </Grid>
         <Grid textAlign="right" gap="1">

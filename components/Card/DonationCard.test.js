@@ -2,6 +2,12 @@ import {render, screen} from '@testing-library/react'
 import differenceInDays from 'date-fns/differenceInDays'
 import DonationCard from './DonationCard'
 
+jest.mock('@lib/formatCurrency')
+
+import formatCurrency from '@lib/formatCurrency'
+
+formatCurrency.mockImplementation(() => 'Rp 18.584.332,00')
+
 describe('DonationCard', () => {
   it("should render DonationCard when props it's empty", () => {
     render(<DonationCard />)
@@ -32,6 +38,8 @@ describe('DonationCard', () => {
       fundraiser: 'Kitabisa.com',
     }
 
+    // formatCurrency.mockImplementation(() => 'Rp 18.584.332,00')
+
     render(<DonationCard {...donation} />)
 
     const img = screen.getByRole('img', {
@@ -42,7 +50,7 @@ describe('DonationCard', () => {
     })
     const fundraiser = screen.getByText(donation.fundraiser)
     const terkumpul = screen.getByText(/terkumpul/i)
-    const amount = screen.getByText(`Rp ${donation.amount}`)
+    const amount = screen.getByText(/rp/i)
     const sisaHari = screen.getByText(/sisa hari/i)
     const deadline = screen.getByText(
       differenceInDays(new Date(donation.deadline), new Date()),
