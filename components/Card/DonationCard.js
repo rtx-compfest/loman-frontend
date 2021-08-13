@@ -29,6 +29,7 @@ const DonationCard = ({
       borderWidth="1px"
       borderRadius="6"
       textAlign="left"
+      height="fit-content"
     >
       <Image
         loader={imgLoader}
