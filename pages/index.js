@@ -3,6 +3,7 @@ import {Container, Grid, Heading} from '@chakra-ui/react'
 
 import {NavUser} from '@components/Nav'
 import {DonationCard} from '@components/Card'
+import Footer from '@components/Footer'
 
 const donation = {
   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
@@ -35,6 +36,10 @@ export default function Home() {
           <DonationCard {...donation} />
         </Grid>
       </Grid>
+
+      <footer>
+        <Footer />
+      </footer>
     </Container>
   )
 }
