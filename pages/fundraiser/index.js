@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import Head from 'next/head'
-import {Container, Grid, Heading} from '@chakra-ui/react'
+import {Container, Grid, Heading, Button, Icon} from '@chakra-ui/react'
+import {PlusIcon} from '@heroicons/react/outline'
 
 import {NavFundraiser} from '@components/Nav'
 import {DonationCard} from '@components/Card'
@@ -30,7 +32,25 @@ export default function Home() {
       </header>
 
       <Grid as="main" marginBlock="85px" gap="8">
-        <Heading size="xl">Dashboard</Heading>
+        <Grid
+          autoFlow="column dense"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Heading size="xl">Dashboard</Heading>
+          <Link href="/fundraiser/create" passHref={true}>
+            <Button
+              as="a"
+              variant="solid"
+              colorScheme="green"
+              justifyContent="space-between"
+              alignItems="center"
+              leftIcon={<Icon as={PlusIcon} stroke="white" boxSize="5" />}
+            >
+              Donation Program
+            </Button>
+          </Link>
+        </Grid>
         <Grid
           templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
           gap="10"
