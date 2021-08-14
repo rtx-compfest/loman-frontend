@@ -59,7 +59,7 @@ export default function Create() {
         <NavFundraiser />
       </header>
 
-      <Grid as="main" marginBlock="85px" gap="8">
+      <Grid as="main" marginBlock="85px" gap="8" placeItems="center">
         <Grid
           maxWidth="720px"
           p={5}
