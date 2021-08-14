@@ -29,7 +29,6 @@ export default function Create() {
   const formSubmit = (values) => {
     if (file != null) {
       values.file = file
-      console.log(values)
     } else {
       toast({
         title: 'Photo is required',
@@ -44,6 +43,36 @@ export default function Create() {
   }
 
   const handleFile = (files) => {
+    const FILE_TYPES = ['image/jpg', 'image/jpeg', 'image/png']
+
+    if (files == null) {
+      toast({
+        title: 'Photo is required',
+        description:
+          'Photo is required with the following types: .jpeg, .jpg, and .png',
+        status: 'warning',
+        position: 'top',
+        duration: 3000,
+        isClosable: true,
+      })
+      setFile(null)
+      return
+    }
+
+    if (!FILE_TYPES.includes(files?.type)) {
+      toast({
+        title: 'File types is invalid',
+        description:
+          'Photo is required with the following types: .jpeg, .jpg, and .png',
+        status: 'warning',
+        position: 'top',
+        duration: 3000,
+        isClosable: true,
+      })
+      setFile(null)
+      return
+    }
+
     setFile(files)
   }
 
