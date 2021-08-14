@@ -19,7 +19,7 @@ const SignIn = () => {
   const [show, setShow] = useState(false)
 
   return (
-    <Layout>
+    <Layout hasNavbar={false} hasFooter={false}>
       <VStack
         boxShadow="md"
         borderRadius="0.5rem"

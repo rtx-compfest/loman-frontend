@@ -125,7 +125,7 @@ const FundraiserSignUp = () => {
 
 const SignUp = () => {
   return (
-    <Layout>
+    <Layout hasNavbar={false} hasFooter={false}>
       <VStack
         align="stretch"
         spacing="2rem"
