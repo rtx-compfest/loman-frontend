@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import {useRouter} from 'next/router'
 import NextLink from 'next/link'
 import {
   Button,
@@ -15,6 +16,7 @@ import {
   TabPanels,
   TabPanel,
   Box,
+  Tag,
 } from '@chakra-ui/react'
 import {ChevronLeftIcon} from '@heroicons/react/outline'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
@@ -39,7 +41,13 @@ const DetailDonation = ({
     width: 445,
     height: 260,
   },
+  user = 'donor',
 }) => {
+  const router = useRouter()
+  const {id} = router.query
+
+  console.log(id)
+
   return (
     <Layout>
       <Grid as="main" marginBlock="85px">
@@ -53,7 +61,7 @@ const DetailDonation = ({
                 alignItems="center"
                 width="fit-content"
                 pr="4"
-                color="gray.500"
+                color="gray.600"
               >
                 <Icon as={ChevronLeftIcon} />
                 <Text>Back to home</Text>
@@ -75,10 +83,21 @@ const DetailDonation = ({
               height={image.height}
             />
             <Grid gap="4" height="fit-content">
-              <Grid>
-                <Text color="gray.500">Category</Text>
+              <Grid
+                autoFlow="column"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text color="gray.600">Category</Text>
+                {user !== 'donor' ? (
+                  <Tag variant="solid" colorScheme="yellow">
+                    Pending
+                  </Tag>
+                ) : (
+                  ''
+                )}
               </Grid>
-              <Heading as="h2" size="xl">
+              <Heading as="h2" size="lg">
                 {name}
               </Heading>
               <Grid
