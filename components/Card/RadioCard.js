@@ -22,10 +22,7 @@ export default function RadioCard(props) {
           borderColor: 'green.600',
         }}
         _focus={{
-          bg: 'green.600',
-          color: 'white',
           boxShadow: 'outline',
-          borderColor: 'green.600',
         }}
         px={5}
         py={3}

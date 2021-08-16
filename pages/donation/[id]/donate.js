@@ -1,6 +1,8 @@
 import * as React from 'react'
+import * as Yup from 'yup'
 import NextLink from 'next/link'
 import {useRouter} from 'next/router'
+import {Field, Form, Formik} from 'formik'
 import {
   Heading,
   useRadioGroup,
@@ -10,6 +12,10 @@ import {
   Icon,
   Textarea,
   Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Checkbox,
 } from '@chakra-ui/react'
 import {ChevronLeftIcon} from '@heroicons/react/outline'
 
@@ -19,20 +25,27 @@ import {RadioCard} from '@components/Card'
 import formatCurrency from '@lib/formatCurrency'
 
 const Donate = () => {
-  const donationAmounts = [10000, 25000, 50000, 100000, 200000, 500000]
+  const amount = ['10000', '25000', '50000', '100000', '200000', '500000']
 
   const router = useRouter()
   const {id} = router.query
 
   const {getRootProps, getRadioProps} = useRadioGroup({
-    name: 'donationAmounts',
-    defaultValue: 10000,
-    onChange: (values) => {
-      console.log(values)
-    },
+    name: 'amount',
+    defaultValue: '10000',
   })
 
   const group = getRootProps()
+
+  const formSubmit = (value) => {
+    const req = {
+      amount: parseInt(value.amount),
+      notes: value.notes,
+      isVisible: value.isAnonymous === false ? 1 : 0,
+    }
+
+    console.log(req)
+  }
 
   return (
     <Layout hasNavbar={false}>
@@ -62,27 +75,107 @@ const Donate = () => {
             <Heading as="h2" size="lg">
               Title {id}
             </Heading>
-            <Grid gap="4">
-              <Text>Enter the donation amount</Text>
-              <Grid {...group} templateColumns="repeat(3, 1fr)" gap="5">
-                {donationAmounts.map((value) => {
-                  const radio = getRadioProps({value})
+            <Formik
+              initialValues={{
+                amount: '10000',
+                notes: '',
+                isAnonymous: false,
+              }}
+              validationSchema={Yup.object({
+                amount: Yup.string()
+                  .oneOf(amount)
+                  .required('Donation amount is Required'),
+                notes: Yup.string(),
+                isAnonymous: Yup.boolean(),
+              })}
+              onSubmit={formSubmit}
+            >
+              <Form>
+                <Field name="amount">
+                  {({field, form}) => {
+                    return (
+                      <FormControl
+                        id="amount"
+                        isInvalid={
+                          !!form.errors.amount && !!form.touched.amount
+                        }
+                      >
+                        <FormLabel htmlFor="amount">
+                          Enter the donation amount
+                        </FormLabel>
+                        <Grid
+                          {...field}
+                          {...group}
+                          templateColumns="repeat(3, 1fr)"
+                          gap="5"
+                        >
+                          {amount.map((value) => {
+                            const radio = getRadioProps({value})
 
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {formatCurrency(value).slice(0, -3)}
-                    </RadioCard>
-                  )
-                })}
-              </Grid>
-            </Grid>
-            <Grid gap="4" mt="5">
-              <Text>Pray in this donation (optional)</Text>
-              <Textarea placeholder="Semoga cepat sembuh"></Textarea>
-            </Grid>
-            <Button variant="solid" colorScheme="green">
-              Donate
-            </Button>
+                            return (
+                              <RadioCard key={value} {...radio}>
+                                {formatCurrency(value).slice(0, -3)}
+                              </RadioCard>
+                            )
+                          })}
+                        </Grid>
+                        <FormErrorMessage>
+                          {form.errors.amount}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )
+                  }}
+                </Field>
+                <Field name="notes">
+                  {({field, form}) => (
+                    <FormControl
+                      marginBlock="4"
+                      isInvalid={form.errors.notes && form.touched.notes}
+                    >
+                      <FormLabel htmlFor="notes">
+                        Pray in this donation (optional)
+                      </FormLabel>
+                      <Textarea
+                        {...field}
+                        id="notes"
+                        resize="vertical"
+                        placeholder="Hope you get well soon"
+                      />
+                      <FormErrorMessage>{form.errors.notes}</FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+                <Field name="isAnonymous" type="checkbox">
+                  {({field, form}) => (
+                    <FormControl
+                      marginBlock="4"
+                      isInvalid={
+                        form.errors.isAnonymous && form.touched.isAnonymous
+                      }
+                    >
+                      <Checkbox
+                        {...field}
+                        colorScheme="green"
+                        id="isAnonymous"
+                      >
+                        Hide my name
+                      </Checkbox>
+                      <FormErrorMessage>
+                        {form.errors.isAnonymous}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+                <Button
+                  variant="solid"
+                  colorScheme="green"
+                  type="submit"
+                  width="100%"
+                >
+                  Donate
+                </Button>
+              </Form>
+            </Formik>
           </Grid>
         </Grid>
       </Grid>
