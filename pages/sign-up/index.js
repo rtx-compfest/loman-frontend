@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import {
+  Box,
   Button,
   Center,
   FormControl,
@@ -501,7 +502,9 @@ const SignUp = () => {
             px="1.5rem"
             py="2rem"
           >
-            <Image src={Logo} alt="Loman logo" />
+            <Box display="flex" justifyContent="flex-start">
+              <Image src={Logo} alt="Loman logo" />
+            </Box>
 
             <Heading>Sign Up</Heading>
 
