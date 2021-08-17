@@ -25,5 +25,6 @@ module.exports = {
     '^@style(.*)$': '<rootDir>/style$1',
     '^@pages(.*)$': '<rootDir>/pages$1',
     '^@hooks(.*)$': '<rootDir>/hooks$1',
+    '^@context(.*)$': '<rootDir>/context$1',
   },
 }
