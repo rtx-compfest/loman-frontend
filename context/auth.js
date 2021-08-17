@@ -8,7 +8,7 @@ import {
 import Cookies from 'js-cookie'
 import decode from 'jwt-decode'
 
-const URL = process.env.URL_API
+const URL = 'https://loman-backend.herokuapp.com'
 
 const AuthContext = createContext(null)
 
@@ -54,8 +54,9 @@ export const AuthProvider = ({children}) => {
 
     const result = await res.json()
 
-    if (result.type !== 'success' || result.status !== 200)
-      return await Promise.reject(result)
+    if (result.status !== true) {
+      throw new Error(result)
+    }
 
     return await Promise.resolve(result)
   }

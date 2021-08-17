@@ -1,5 +1,4 @@
 import * as Yup from 'yup'
-import {Layout} from '@components/Layout'
 import {
   Button,
   Center,
@@ -20,19 +19,62 @@ import {
   Tabs,
   Text,
   Textarea,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import {useState} from 'react'
 import Image from 'next/image'
-import Logo from '../../public/loman.svg'
 import {Field, Form, Formik} from 'formik'
+import {useMutation} from 'react-query'
+import {useRouter} from 'next/router'
+
+import {Layout} from '@components/Layout'
+import {useAuthContext} from '@context/auth'
+import Logo from '../../public/loman.svg'
 
 const DonorSignUp = () => {
+  const {signUp} = useAuthContext()
+  const toast = useToast()
+  const router = useRouter()
+
   const [show, setShow] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const mutation = useMutation(['/register'], (data) => {
+    setIsSubmitting(true)
+
+    return signUp(data)
+      .then((result) => {
+        toast({
+          title: 'Sign up success!',
+          description: 'Sign up success, redirecting to Sign In page',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+
+        setIsSubmitting(false)
+        router.push('/sign-in')
+
+        return result.data
+      })
+      .catch((err) => {
+        toast({
+          title: err.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        setIsSubmitting(false)
+        return err
+      })
+  })
 
   const formSubmit = (value) => {
-    console.log(value)
+    value.phone = '0' + value.phone
+    const data = {...value, user_roles: 2}
+    mutation.mutate(data)
   }
 
   return (
@@ -41,7 +83,7 @@ const DonorSignUp = () => {
         name: '',
         password: '',
         email: '',
-        phoneNumber: '',
+        phone: '',
       }}
       validationSchema={Yup.object({
         name: Yup.string().required('Name is Required'),
@@ -49,7 +91,7 @@ const DonorSignUp = () => {
         email: Yup.string()
           .email('Email is invalid')
           .required('Email is required'),
-        phoneNumber: Yup.number('Phone number must be number').required(
+        phone: Yup.number('Phone number must be number').required(
           'Phone number is required',
         ),
       })}
@@ -116,20 +158,18 @@ const DonorSignUp = () => {
               </FormControl>
             )}
           </Field>
-          <Field name="phoneNumber" type="tel">
+          <Field name="phone" type="tel">
             {({field, form}) => (
               <FormControl
                 marginBlock="4"
-                isInvalid={
-                  form.errors.phoneNumber && form.touched.phoneNumber
-                }
+                isInvalid={form.errors.phone && form.touched.phone}
               >
-                <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+                <FormLabel htmlFor="phone">Phone Number</FormLabel>
                 <InputGroup>
                   <InputLeftAddon>+62</InputLeftAddon>
-                  <Input {...field} type="tel" id="phoneNumber" />
+                  <Input {...field} type="tel" id="phone" />
                 </InputGroup>
-                <FormErrorMessage>{form.errors.phoneNumber}</FormErrorMessage>
+                <FormErrorMessage>{form.errors.phone}</FormErrorMessage>
               </FormControl>
             )}
           </Field>
@@ -138,6 +178,7 @@ const DonorSignUp = () => {
           type="submit"
           variant="solid"
           colorScheme="green"
+          isLoading={isSubmitting}
           width="100%"
           marginBlock="4"
         >
@@ -158,10 +199,64 @@ const DonorSignUp = () => {
 }
 
 const FundraiserSignUp = () => {
+  const {signUp} = useAuthContext()
+  const toast = useToast()
+  const router = useRouter()
+
   const [show, setShow] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const mutation = useMutation(['/register'], (data) => {
+    setIsSubmitting(true)
+
+    return signUp(data)
+      .then((result) => {
+        toast({
+          title: 'Sign up success!',
+          description: 'Sign up success, redirecting to Sign In page',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+
+        setIsSubmitting(false)
+        router.push('/sign-in')
+
+        return result.data
+      })
+      .catch((err) => {
+        toast({
+          title: err.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        setIsSubmitting(false)
+        return err
+      })
+  })
 
   const formSubmit = (value) => {
-    console.log(value)
+    const {
+      fundraiserName,
+      fundraiserEmail,
+      fundraiserPassword,
+      fundraiserPhoneNumber,
+      socialMedia,
+      ...rest
+    } = value
+
+    const data = {
+      name: fundraiserName,
+      email: fundraiserEmail,
+      password: fundraiserPassword,
+      phone: fundraiserPhoneNumber,
+      socialmedia: socialMedia,
+      ...rest,
+      user_roles: 3,
+    }
+
+    mutation.mutate(data)
   }
 
   return (
@@ -374,6 +469,7 @@ const FundraiserSignUp = () => {
           variant="solid"
           colorScheme="green"
           width="100%"
+          isLoading={isSubmitting}
           marginBlock="4"
         >
           Sign Up
@@ -396,7 +492,7 @@ const SignUp = () => {
   return (
     <Layout hasNavbar={false} hasFooter={false}>
       <Grid as="main" placeItems="center" minHeight="100vh">
-        <Grid marginBlock="85px">
+        <Grid marginBlock="85px" maxWidth="615px">
           <VStack
             align="stretch"
             spacing="2rem"
