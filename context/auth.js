@@ -50,8 +50,6 @@ export const AuthProvider = ({children}) => {
 
     const res = await fetch(`${URL}/user/register`, options)
 
-    console.log(res)
-
     const result = await res.json()
 
     if (result.status !== true) {
@@ -88,7 +86,9 @@ export const AuthProvider = ({children}) => {
 
     const result = await res.json()
 
-    if (result.status !== true) return await Promise.reject(result)
+    if (result.status !== true) {
+      throw new Error(result)
+    }
 
     setUserData(getUser())
 
