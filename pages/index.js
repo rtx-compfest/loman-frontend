@@ -1,4 +1,5 @@
 import {Layout} from '@components/Layout'
+import {DonorRoute} from '@components/Route'
 
 // const donation = {
 //   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
@@ -8,7 +9,7 @@ import {Layout} from '@components/Layout'
 //   fundraiser: 'Kitabisa.com',
 // }
 
-export default function Home() {
+function Home() {
   return (
     <Layout>
       {/*Use the dashboard component and prepare the props*/}
@@ -25,3 +26,13 @@ export default function Home() {
     </Layout>
   )
 }
+
+function Route() {
+  return (
+    <DonorRoute>
+      <Home />
+    </DonorRoute>
+  )
+}
+
+export default Route

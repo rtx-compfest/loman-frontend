@@ -92,6 +92,20 @@ export const AuthProvider = ({children}) => {
     setUserData(null)
   }
 
+  const isLoggedInAsDonor = () => {
+    const user = getUser()
+
+    if (user == null) {
+      return false
+    }
+
+    if (user.role === 2) {
+      return true
+    }
+
+    return false
+  }
+
   const setToken = (token) => {
     Cookies.set('token', token)
   }
@@ -130,7 +144,7 @@ export const AuthProvider = ({children}) => {
     signIn,
     signUp,
     logout,
-    isAuthenticated: !!userData,
+    isLoggedInAsDonor,
     loading,
     request,
   }
@@ -139,5 +153,11 @@ export const AuthProvider = ({children}) => {
 }
 
 export const useAuthContext = () => {
-  return useContext(AuthContext)
+  const context = useContext(AuthContext)
+
+  if (context == undefined) {
+    throw new Error('useCount must be used within a CountProvider')
+  }
+
+  return context
 }

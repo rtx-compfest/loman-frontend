@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import NextLink from 'next/link'
 import Image from 'next/image'
 import * as Yup from 'yup'
@@ -28,38 +28,58 @@ import {useAuthContext} from '@context/auth'
 import Logo from '../../public/loman.svg'
 
 const SignIn = () => {
-  const {signIn} = useAuthContext()
+  const {signIn, logout} = useAuthContext()
   const toast = useToast()
   const router = useRouter()
 
   const [show, setShow] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const toastNotif = useCallback(
+    (title = 'Sign In success', status = 'success') => {
+      toast({
+        title: title,
+        status: status,
+        position: 'top',
+        duration: 3000,
+        isClosable: true,
+      })
+    },
+    [toast],
+  )
+
   const mutation = useMutation(['/login'], (data) => {
     setIsSubmitting(true)
 
     return signIn(data)
       .then((result) => {
-        toast({
-          title: 'Sign In success!',
-          description: 'Sign up success, redirecting to Sign In page',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        })
+        const {status_user, user_roles} = result.data
 
         setIsSubmitting(false)
-        router.push('/')
+
+        if (user_roles === 1) {
+          toastNotif()
+          router.push('/admin')
+        } else if (user_roles === 2 && status_user === '1') {
+          toastNotif()
+          router.push('/')
+        } else if (user_roles === 3 && status_user === '1') {
+          toastNotif()
+          router.push('/fundraiser')
+        } else if (status_user === '0') {
+          logout()
+          toastNotif('Account is not yet verified', 'info')
+          router.push('/sign-in')
+        } else if (status_user === '2') {
+          logout()
+          toastNotif('Account is rejected', 'error')
+          router.push('/sign-up')
+        }
 
         return result.data
       })
       .catch((err) => {
-        toast({
-          title: err.message,
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
+        toastNotif(err.message, 'error')
         setIsSubmitting(false)
         return err
       })
