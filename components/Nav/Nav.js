@@ -23,7 +23,7 @@ const Nav = ({children}) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        {children}
+        {process.browser ? children : ''}
       </Grid>
     </Grid>
   )
