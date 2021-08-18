@@ -28,7 +28,7 @@ const NavUser = () => {
         </MenuButton>
         <MenuList>
           <MenuItem>
-            <Link href="#" passHref={true}>
+            <Link href="/sign-up" passHref={true}>
               <Button
                 colorScheme="green"
                 variant="outline"
@@ -40,7 +40,7 @@ const NavUser = () => {
             </Link>
           </MenuItem>
           <MenuItem>
-            <Link href="#" passHref={true}>
+            <Link href="/sign-in" passHref={true}>
               <Button colorScheme="green" variant="solid" as="a" width="100%">
                 Sign In
               </Button>

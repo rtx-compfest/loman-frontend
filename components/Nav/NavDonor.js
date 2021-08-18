@@ -34,7 +34,7 @@ const NavDonor = ({name, balance = 0}) => {
         </ListItem>
       </List>
       <Grid autoFlow="column dense" gap="4" alignItems="center">
-        <Link href="#" passHref={true}>
+        <Link href="/e-wallet/topup" passHref={true}>
           <Button
             leftIcon={<Icon boxSize="4" as={PlusIcon} />}
             colorScheme="green"
