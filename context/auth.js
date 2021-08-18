@@ -94,11 +94,12 @@ export const AuthProvider = ({children}) => {
 
   const isAuthenticated = () => {
     const user = getUser()
-    const {role} = user
 
     if (user == null) {
       return false
     }
+
+    const {role} = user
 
     switch (role) {
       case 1:

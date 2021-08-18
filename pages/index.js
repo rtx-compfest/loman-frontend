@@ -11,22 +11,28 @@ import {ProtectedRoute} from '@components/Route'
 
 function Home() {
   return (
+    <Layout>
+      {/*Use the dashboard component and prepare the props*/}
+      {/*<Grid as="main" marginBlock="85px" gap="8">*/}
+      {/*  <Heading size="xl">Fundraising</Heading>*/}
+      {/*  <Grid*/}
+      {/*    templateColumns="repeat(auto-fill, minmax(280px, 1fr))"*/}
+      {/*    gap="10"*/}
+      {/*  >*/}
+      {/*    <DonationCard/>*/}
+      {/*    <DonationCard {...donation} />*/}
+      {/*  </Grid>*/}
+      {/*</Grid>*/}
+    </Layout>
+  )
+}
+
+function HomeRoute() {
+  return (
     <ProtectedRoute route="donor">
-      <Layout>
-        {/*Use the dashboard component and prepare the props*/}
-        {/*<Grid as="main" marginBlock="85px" gap="8">*/}
-        {/*  <Heading size="xl">Fundraising</Heading>*/}
-        {/*  <Grid*/}
-        {/*    templateColumns="repeat(auto-fill, minmax(280px, 1fr))"*/}
-        {/*    gap="10"*/}
-        {/*  >*/}
-        {/*    <DonationCard/>*/}
-        {/*    <DonationCard {...donation} />*/}
-        {/*  </Grid>*/}
-        {/*</Grid>*/}
-      </Layout>
+      <Home />
     </ProtectedRoute>
   )
 }
 
-export default Home
+export default HomeRoute
