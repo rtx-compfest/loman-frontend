@@ -1,5 +1,7 @@
 import {Layout} from '@components/Layout'
+import {NavDonor} from '@components/Nav'
 import {ProtectedRoute} from '@components/Route'
+import {useAuthContext} from '@context/auth'
 
 // const donation = {
 //   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
@@ -12,8 +14,13 @@ import {ProtectedRoute} from '@components/Route'
 // }
 
 function Home() {
+  const {isAuthenticated} = useAuthContext()
+
   return (
-    <Layout>
+    <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
+      <header>
+        <NavDonor />
+      </header>
       {/*Use the dashboard component and prepare the props*/}
       {/*<Grid as="main" marginBlock="85px" gap="8">*/}
       {/*  <Heading size="xl">Fundraising</Heading>*/}

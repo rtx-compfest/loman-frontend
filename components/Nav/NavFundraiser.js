@@ -35,7 +35,7 @@ const NavFundraiser = ({name, balance = 0}) => {
         </ListItem>
       </List>
       <Grid autoFlow="column dense" gap="4" alignItems="center">
-        <Link href="#" passHref={true}>
+        <Link href="/e-wallet" passHref={true}>
           <Button
             leftIcon={<Icon as={CashIcon} boxSize="5" />}
             colorScheme="gray"

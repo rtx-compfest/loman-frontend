@@ -20,12 +20,12 @@ const NavAdmin = () => {
     <Nav>
       <List display="grid" gridGap="4" gridAutoFlow="column">
         <ListItem>
-          <Link href="/">
+          <Link href="/admin">
             <a>Dashboard</a>
           </Link>
         </ListItem>
         <ListItem>
-          <Link href="/fundraising">
+          <Link href="/donation">
             <a>Fundraising</a>
           </Link>
         </ListItem>
