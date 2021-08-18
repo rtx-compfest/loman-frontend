@@ -1,3 +1,3 @@
-import DonorRoute from './DonorRoute'
+import ProtectedRoute from './ProtectedRoute'
 
-export {DonorRoute}
+export {ProtectedRoute}

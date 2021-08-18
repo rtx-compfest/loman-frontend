@@ -1,5 +1,5 @@
 import {Layout} from '@components/Layout'
-import {DonorRoute} from '@components/Route'
+import {ProtectedRoute} from '@components/Route'
 
 // const donation = {
 //   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
@@ -11,28 +11,22 @@ import {DonorRoute} from '@components/Route'
 
 function Home() {
   return (
-    <Layout>
-      {/*Use the dashboard component and prepare the props*/}
-      {/*<Grid as="main" marginBlock="85px" gap="8">*/}
-      {/*  <Heading size="xl">Fundraising</Heading>*/}
-      {/*  <Grid*/}
-      {/*    templateColumns="repeat(auto-fill, minmax(280px, 1fr))"*/}
-      {/*    gap="10"*/}
-      {/*  >*/}
-      {/*    <DonationCard/>*/}
-      {/*    <DonationCard {...donation} />*/}
-      {/*  </Grid>*/}
-      {/*</Grid>*/}
-    </Layout>
+    <ProtectedRoute route="donor">
+      <Layout>
+        {/*Use the dashboard component and prepare the props*/}
+        {/*<Grid as="main" marginBlock="85px" gap="8">*/}
+        {/*  <Heading size="xl">Fundraising</Heading>*/}
+        {/*  <Grid*/}
+        {/*    templateColumns="repeat(auto-fill, minmax(280px, 1fr))"*/}
+        {/*    gap="10"*/}
+        {/*  >*/}
+        {/*    <DonationCard/>*/}
+        {/*    <DonationCard {...donation} />*/}
+        {/*  </Grid>*/}
+        {/*</Grid>*/}
+      </Layout>
+    </ProtectedRoute>
   )
 }
 
-function Route() {
-  return (
-    <DonorRoute>
-      <Home />
-    </DonorRoute>
-  )
-}
-
-export default Route
+export default Home

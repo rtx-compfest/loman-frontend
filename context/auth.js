@@ -92,18 +92,25 @@ export const AuthProvider = ({children}) => {
     setUserData(null)
   }
 
-  const isLoggedInAsDonor = () => {
+  const isAuthenticated = () => {
     const user = getUser()
+    const {role} = user
 
     if (user == null) {
       return false
     }
 
-    if (user.role === 2) {
-      return true
-    }
+    switch (role) {
+      case 1:
+        return 'admin'
+      case 2:
+        return 'donor'
+      case 3:
+        return 'fundraiser'
 
-    return false
+      default:
+        return false
+    }
   }
 
   const setToken = (token) => {
@@ -144,7 +151,7 @@ export const AuthProvider = ({children}) => {
     signIn,
     signUp,
     logout,
-    isLoggedInAsDonor,
+    isAuthenticated,
     loading,
     request,
   }

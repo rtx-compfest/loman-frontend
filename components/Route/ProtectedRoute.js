@@ -1,11 +1,11 @@
 import {useAuthContext} from '@context/auth'
 import {useRouter} from 'next/router'
 
-const DonorRoute = ({children}) => {
-  const {isLoggedInAsDonor} = useAuthContext()
+const ProtectedRoute = ({route, children}) => {
+  const {isAuthenticated} = useAuthContext()
   const router = useRouter()
 
-  if (!isLoggedInAsDonor()) {
+  if (isAuthenticated() !== route) {
     router.replace('/sign-in')
     return null
   }
@@ -13,4 +13,4 @@ const DonorRoute = ({children}) => {
   return children
 }
 
-export default DonorRoute
+export default ProtectedRoute
