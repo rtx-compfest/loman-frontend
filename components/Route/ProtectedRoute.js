@@ -5,9 +5,11 @@ const ProtectedRoute = ({route, children}) => {
   const {isAuthenticated} = useAuthContext()
   const router = useRouter()
 
-  if (isAuthenticated() !== route) {
-    router.replace('/sign-in')
-    return null
+  if (process.browser) {
+    if (isAuthenticated() !== route) {
+      router.replace('/sign-in')
+      return null
+    }
   }
 
   return children

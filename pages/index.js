@@ -7,6 +7,8 @@ import {ProtectedRoute} from '@components/Route'
 //   amount: 18584332,
 //   deadline: '2021-08-31',
 //   fundraiser: 'Kitabisa.com',
+//   status: 'Pending',
+//   category: 'Pendidikan',
 // }
 
 function Home() {
@@ -20,7 +22,7 @@ function Home() {
       {/*    gap="10"*/}
       {/*  >*/}
       {/*    <DonationCard/>*/}
-      {/*    <DonationCard {...donation} />*/}
+      {/*    <DonationCard {...donation} /> */}
       {/*  </Grid>*/}
       {/*</Grid>*/}
     </Layout>

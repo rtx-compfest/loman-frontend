@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import {Grid, Heading, Icon, Progress, Text} from '@chakra-ui/react'
+import {Grid, Heading, Icon, Progress, Tag, Text} from '@chakra-ui/react'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
 import differenceInDays from 'date-fns/differenceInDays'
 import formatCurrency from '@lib/formatCurrency'
@@ -14,6 +14,8 @@ const DonationCard = ({
   amount = 0,
   target_amount = 100,
   deadline = 0,
+  status,
+  category = 'donation',
   image = {
     src: 'https://via.placeholder.com/280x155?text=Donation+Image',
     alt: 'Alt Image',
@@ -38,6 +40,42 @@ const DonationCard = ({
         width={image.width}
         height={image.height}
       />
+      <Grid
+        alignItems="center"
+        justifyContent="space-between"
+        gap="4"
+        autoFlow="column"
+      >
+        <Tag>{category}</Tag>
+        {status != '' && status === 'Pending' ? (
+          <Tag variant="solid" colorScheme="yellow">
+            {status}
+          </Tag>
+        ) : (
+          ''
+        )}
+        {status != '' && status === 'Rejected' ? (
+          <Tag variant="solid" colorScheme="red">
+            {status}
+          </Tag>
+        ) : (
+          ''
+        )}
+        {status != '' && status === 'Completed' ? (
+          <Tag variant="solid" colorScheme="green">
+            {status}
+          </Tag>
+        ) : (
+          ''
+        )}
+        {status != '' && status === 'Verified' ? (
+          <Tag variant="solid" colorScheme=" blue">
+            {status}
+          </Tag>
+        ) : (
+          ''
+        )}
+      </Grid>
       <Heading as="h4" size="md">
         {name}
       </Heading>
