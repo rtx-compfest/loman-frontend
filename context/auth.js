@@ -27,77 +27,73 @@ export const AuthProvider = ({children}) => {
   }, [])
 
   useEffect(() => {
-    // Call api for getting user data
     async function loadUserFromCookies() {
       const token = getToken()
       if (token) {
-        console.log("Got a token in the cookies, let's see if it is valid")
         setUserData(getUser())
       }
       setLoading(false)
     }
+
     loadUserFromCookies()
   }, [getUser])
 
   const signUp = async (data) => {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    try {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+
+      const res = await fetch(`${URL}/user/register`, options)
+      const result = await res.json()
+
+      if (result.status !== true) {
+        throw new Error(result)
+      }
+
+      return await Promise.resolve(result)
+    } catch (error) {
+      throw new Error(error)
     }
-
-    const res = await fetch(`${URL}/user/register`, options)
-
-    const result = await res.json()
-
-    if (result.status !== true) {
-      throw new Error(result)
-    }
-
-    return await Promise.resolve(result)
   }
 
   const signIn = async (data) => {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-    const res = await fetch(`${URL}/user/login`, options)
-
-    /*
-      Response value:
-
-      result = {
-        "status": true
-        "message": "Login successful",
-        "data": {
-          "name": "donor",
-          "email": "test@mail.com",
-          "status_user": "1",
-          "user_roles": 2
+    try {
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
         },
+        credentials: 'include',
       }
-    */
+      const res = await fetch(`${URL}/user/login`, options)
+      const result = await res.json()
 
-    const result = await res.json()
+      if (result.status !== true) {
+        throw new Error(result)
+      }
 
-    if (result.status !== true) {
-      throw new Error(result)
+      setToken(result.token)
+      setUserData({...getUser(), status_user: res.status_user})
+
+      return await Promise.resolve(result)
+    } catch (error) {
+      throw new Error(error)
     }
-
-    setUserData(getUser())
-
-    return await Promise.resolve(result)
   }
 
   const logout = () => {
     removeToken()
     setUserData(null)
+  }
+
+  const setToken = (token) => {
+    Cookies.set('token', token)
   }
 
   const getToken = () => {
@@ -110,17 +106,23 @@ export const AuthProvider = ({children}) => {
   }
 
   const request = async (endpoint, options) => {
-    const headers = {
-      'Content-Type': 'application/json',
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        Cookie: `token=${getToken()}`,
+      }
+
+      const res = await fetch(`${URL}${endpoint}`, {headers, ...options})
+      const result = await res.json()
+
+      if (result.status !== true) {
+        throw new Error(result)
+      }
+
+      return await Promise.resolve(result)
+    } catch (error) {
+      throw new Error(error)
     }
-
-    const res = await fetch(`${URL}${endpoint}`, {headers, ...options})
-    const result = await res.json()
-
-    if (result.type !== 'success' || result.status !== 200)
-      return await Promise.reject(result)
-
-    return await Promise.resolve(result)
   }
 
   const value = {

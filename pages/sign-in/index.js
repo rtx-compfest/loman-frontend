@@ -17,19 +17,56 @@ import {
   InputRightElement,
   Link,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
+import {useRouter} from 'next/router'
+import {useMutation} from 'react-query'
 
 import {Layout} from '@components/Layout'
+import {useAuthContext} from '@context/auth'
 import Logo from '../../public/loman.svg'
 
 const SignIn = () => {
+  const {signIn} = useAuthContext()
+  const toast = useToast()
+  const router = useRouter()
+
   const [show, setShow] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const mutation = useMutation(['/login'], (data) => {
+    setIsSubmitting(true)
+
+    return signIn(data)
+      .then((result) => {
+        toast({
+          title: 'Sign In success!',
+          description: 'Sign up success, redirecting to Sign In page',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        })
+
+        setIsSubmitting(false)
+        router.push('/')
+
+        return result.data
+      })
+      .catch((err) => {
+        toast({
+          title: err.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        setIsSubmitting(false)
+        return err
+      })
+  })
+
   const formSubmit = (value) => {
-    console.log(value)
+    mutation.mutate(value)
   }
 
   return (
@@ -121,7 +158,7 @@ const SignIn = () => {
                   width="100%"
                   marginBlock="4"
                 >
-                  Sign Up
+                  Sign In
                 </Button>
 
                 <Center alignSelf="stretch">
