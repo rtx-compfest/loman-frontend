@@ -2,6 +2,9 @@
 
 ## Getting Started
 
+Before run the development server, change `.env.local.example` to `.env.local`
+and change the `URL_API=` value to your url API server
+
 First, run the development server:
 
 ```bash

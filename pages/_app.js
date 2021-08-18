@@ -2,6 +2,7 @@ import * as React from 'react'
 import {ChakraProvider} from '@chakra-ui/react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {Hydrate} from 'react-query/hydration'
+import {AuthProvider} from '@context/auth'
 import '../styles/globals.css'
 
 function MyApp({Component, pageProps}) {
@@ -11,7 +12,9 @@ function MyApp({Component, pageProps}) {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <ChakraProvider>
-          <Component {...pageProps} />
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
         </ChakraProvider>
       </Hydrate>
     </QueryClientProvider>
