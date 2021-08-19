@@ -1,7 +1,5 @@
 /**
  * Dashboard is a component for showing all the activities a user can see and varies between user role
- *
- * @param props is a list of object containing the
  */
 
 // props structure: (Donator)
