@@ -29,7 +29,7 @@ import statusColor from '@lib/statusColor'
 import backToHome from '@lib/backToHome'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
-import {NavDonor} from '@components/Nav'
+import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
 import {URL} from 'constant'
 
 const imgLoader = ({src}) => {
@@ -68,10 +68,24 @@ const DetailDonation = () => {
     : 0
 
   return (
-    <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
+    <Layout hasNavbar={isAuthenticated() ? false : true}>
       {isAuthenticated() === 'donor' ? (
         <header>
           <NavDonor />
+        </header>
+      ) : (
+        ''
+      )}
+      {isAuthenticated() === 'admin' ? (
+        <header>
+          <NavAdmin />
+        </header>
+      ) : (
+        ''
+      )}
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
         </header>
       ) : (
         ''
@@ -189,24 +203,72 @@ const DetailDonation = () => {
                   </Grid>
                 </Grid>
                 <ButtonGroup spacing="4">
-                  <Link
-                    as={NextLink}
-                    href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
-                    passHref={true}
-                  >
+                  {isAuthenticated() === 'donor' ? (
+                    <Link
+                      as={NextLink}
+                      href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
+                      passHref={true}
+                    >
+                      <Button
+                        colorScheme="green"
+                        as="a"
+                        variant="solid"
+                        width="65%"
+                        isDisabled={sisaHari <= 0 ? true : false}
+                      >
+                        Donate
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link
+                      as={NextLink}
+                      href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
+                      passHref={true}
+                    >
+                      <Button
+                        colorScheme="green"
+                        as="a"
+                        variant="solid"
+                        width="65%"
+                        isDisabled={sisaHari <= 0 ? true : false}
+                      >
+                        Donate
+                      </Button>
+                    </Link>
+                  )}
+                  {isAuthenticated() === 'admin' ? (
                     <Button
                       colorScheme="green"
-                      as="a"
                       variant="solid"
-                      width="65%"
+                      width="50%"
                       isDisabled={sisaHari <= 0 ? true : false}
+                      onClick={verifyDonation}
                     >
-                      Donate
+                      {donationQuery.data.case === 'Pending' ? 'Verify' : ''}
                     </Button>
-                  </Link>
-                  <Button variant="outline" width="35%">
-                    Share
-                  </Button>
+                  ) : (
+                    ''
+                  )}
+                  {isAuthenticated() === 'admin' ? (
+                    <Button
+                      colorScheme="red"
+                      variant="solid"
+                      width="50%"
+                      isDisabled={sisaHari <= 0 ? true : false}
+                      onClick={rejectDonation}
+                    >
+                      {donationQuery.data.case === 'Pending' ? 'Reject' : ''}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      width={
+                        isAuthenticated() === 'fundraiser' ? '100%' : '35%'
+                      }
+                    >
+                      Share
+                    </Button>
+                  )}
                 </ButtonGroup>
               </Grid>
             </Grid>
