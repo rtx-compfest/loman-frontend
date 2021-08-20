@@ -7,8 +7,9 @@ import Footer from '@components/Footer'
 import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
+import {ProtectedRoute} from '@components/Route'
 
-export default function Home() {
+function Fundraiser() {
   const {isAuthenticated} = useAuthContext()
 
   return (
@@ -66,5 +67,13 @@ export default function Home() {
         <Footer />
       </footer>
     </Layout>
+  )
+}
+
+export default function FundraiserRoute() {
+  return (
+    <ProtectedRoute route="fundraiser">
+      <Fundraiser />
+    </ProtectedRoute>
   )
 }

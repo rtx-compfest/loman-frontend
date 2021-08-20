@@ -3,9 +3,10 @@ import {Grid, Heading} from '@chakra-ui/react'
 import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {NavAdmin} from '@components/Nav'
+import {ProtectedRoute} from '@components/Route'
 import {useAuthContext} from '@context/auth'
 
-const Admin = () => {
+export const Admin = () => {
   const {isAuthenticated} = useAuthContext()
 
   return (
@@ -43,4 +44,10 @@ const Admin = () => {
   )
 }
 
-export default Admin
+export default function AdminRoute() {
+  return (
+    <ProtectedRoute route="admin">
+      <Admin />
+    </ProtectedRoute>
+  )
+}

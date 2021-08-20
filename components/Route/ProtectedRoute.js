@@ -7,7 +7,7 @@ const ProtectedRoute = ({route, children}) => {
 
   if (process.browser) {
     if (Array.isArray(route)) {
-      if (route.includes(isAuthenticated())) {
+      if (!route.includes(isAuthenticated())) {
         router.replace('/sign-in')
         return null
       }

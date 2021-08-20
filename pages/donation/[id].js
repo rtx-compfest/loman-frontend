@@ -26,6 +26,7 @@ import {DonationCategory} from 'constant'
 
 import formatCurrency from '@lib/formatCurrency'
 import statusColor from '@lib/statusColor'
+import backToHome from '@lib/backToHome'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
 import {NavDonor} from '@components/Nav'
@@ -79,7 +80,7 @@ const DetailDonation = () => {
       {donationQuery.isSuccess ? (
         <Grid as="main" marginBlock="85px">
           <Grid>
-            <Link as={NextLink} href="/">
+            <Link as={NextLink} href={backToHome(isAuthenticated())}>
               <a style={{width: 'fit-content', marginLeft: '20px'}}>
                 <Grid
                   autoFlow="column dense"
