@@ -102,7 +102,7 @@ const NavDonor = () => {
                 width="100%"
               >
                 <Text>Balance</Text>
-                <Text as="strong">{user != null ? user.amount : '0'}</Text>
+                <Text as="strong">{user != null ? user?.amount : '0'}</Text>
               </Grid>
             </MenuItem>
             <MenuDivider />

@@ -14,3 +14,13 @@ export const DonationCategory = new Map([
   [11, 'Pelari Baik'],
   [12, 'Rumah Ibadah'],
 ])
+
+export const amount = [
+  '10000',
+  '25000',
+  '50000',
+  '100000',
+  '200000',
+  '500000',
+]
+export const payment = ['BNI', 'BRI', 'Mandiri', 'BSI', 'Permata', 'Muamalat']

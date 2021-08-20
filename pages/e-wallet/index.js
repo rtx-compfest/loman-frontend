@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Link from 'next/link'
 import {
   Button,
@@ -6,20 +7,46 @@ import {
   Icon,
   Table,
   Tbody,
-  Td,
+  // Td,
   Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
-import {format} from 'date-fns'
+// import {format} from 'date-fns'
 
 import {Layout} from '@components/Layout'
 import {NavDonor} from '@components/Nav'
 import formatCurrency from '@lib/formatCurrency'
+import {useAuthContext} from '@context/auth'
+import {ProtectedRoute} from '@components/Route'
 
-const Index = () => {
+export const EWallet = () => {
+  const [user, setUser] = React.useState(null)
+  const {userData, request} = useAuthContext()
+
+  React.useEffect(() => {
+    const options = {
+      method: 'GET',
+    }
+
+    if (userData == undefined) {
+      return
+    }
+
+    request(`/user/${userData?.userId}`, options)
+      .then((result) => {
+        setUser(result.data)
+        console.log(result.data)
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  }, [userData, request])
+
   return (
     <Layout hasNavbar={false}>
       <header>
@@ -44,7 +71,9 @@ const Index = () => {
               <Grid gap="2">
                 <Text>Balance</Text>
                 <Text as="strong" fontSize="lg">
-                  {formatCurrency(10000).slice(0, -3)}
+                  {user != null
+                    ? formatCurrency(user.amount).slice(0, -3)
+                    : formatCurrency(0).slice(0, -3)}
                 </Text>
               </Grid>
               <Grid p="2">
@@ -76,13 +105,13 @@ const Index = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  <Tr>
+                  {/* <Tr>
                     <Td>1</Td>
                     <Td>128937</Td>
                     <Td>{format(new Date(), 'dd-MM-yyyy')}</Td>
                     <Td>Top Up</Td>
                     <Td>{formatCurrency(10000)}</Td>
-                  </Tr>
+                  </Tr> */}
                 </Tbody>
               </Table>
             </Grid>
@@ -93,4 +122,10 @@ const Index = () => {
   )
 }
 
-export default Index
+export default function EWalletRoute() {
+  return (
+    <ProtectedRoute route={['donor', 'fundraiser']}>
+      <EWallet />
+    </ProtectedRoute>
+  )
+}

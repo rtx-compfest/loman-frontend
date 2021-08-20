@@ -12,19 +12,62 @@ import {
   Text,
   Textarea,
   useRadioGroup,
+  useToast,
 } from '@chakra-ui/react'
+import {useMutation, useQueryClient} from 'react-query'
 
 import {Layout} from '@components/Layout'
 import {NavDonor} from '@components/Nav'
 import {RadioCard} from '@components/Card'
 import formatCurrency from '@lib/formatCurrency'
+import {amount, payment} from 'constant'
+import {useAuthContext} from '@context/auth'
+import {useRouter} from 'next/router'
 
 const TopUp = () => {
+  const toast = useToast()
+  const router = useRouter()
+  const queryCache = useQueryClient()
+  const {userData, request} = useAuthContext()
+
   const [amounts, setAmounts] = React.useState('')
   const [payments, setPayments] = React.useState('')
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  const amount = ['10000', '25000', '50000', '100000', '200000', '500000']
-  const payment = ['BNI', 'BRI', 'Mandiri', 'BSI', 'Permata', 'Muamalat']
+  const topUpMutation = useMutation(['/topup'], (data) => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }
+
+    setIsSubmitting(true)
+
+    return request(`/wallet/topup`, options)
+      .then((result) => {
+        toast({
+          title: 'Top Up Success',
+          status: 'success',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
+        queryCache.invalidateQueries(`/user/${userData?.userId}`)
+        router.push('/e-wallet')
+        setIsSubmitting(false)
+        return result.data
+      })
+      .catch((err) => {
+        toast({
+          title: err.message,
+          status: 'error',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
+        setIsSubmitting(false)
+        return err
+      })
+  })
 
   const amountRadio = useRadioGroup({
     name: 'amount',
@@ -45,12 +88,14 @@ const TopUp = () => {
 
   const formSubmit = (value) => {
     const req = {
+      userId: userData.userId,
       amount: parseInt(value.amount),
-      // payment: value.payment,
       notes: value.notes,
     }
 
     console.log(req)
+
+    topUpMutation.mutate(req)
   }
 
   return (
@@ -193,7 +238,12 @@ const TopUp = () => {
                         </Text>
                       </Text>
                     </Grid>
-                    <Button variant="solid" colorScheme="green" type="submit">
+                    <Button
+                      variant="solid"
+                      colorScheme="green"
+                      type="submit"
+                      isLoading={isSubmitting}
+                    >
                       Top Up
                     </Button>
                   </Grid>
