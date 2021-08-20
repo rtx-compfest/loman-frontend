@@ -1,6 +1,5 @@
 import {Layout} from '@components/Layout'
 import {NavDonor} from '@components/Nav'
-import {ProtectedRoute} from '@components/Route'
 import {useAuthContext} from '@context/auth'
 
 // const donation = {
@@ -18,9 +17,13 @@ function Home() {
 
   return (
     <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
-      <header>
-        <NavDonor />
-      </header>
+      {isAuthenticated() === 'donor' ? (
+        <header>
+          <NavDonor />
+        </header>
+      ) : (
+        ''
+      )}
       {/*Use the dashboard component and prepare the props*/}
       {/*<Grid as="main" marginBlock="85px" gap="8">*/}
       {/*  <Heading size="xl">Fundraising</Heading>*/}
@@ -36,12 +39,4 @@ function Home() {
   )
 }
 
-function HomeRoute() {
-  return (
-    <ProtectedRoute route="donor">
-      <Home />
-    </ProtectedRoute>
-  )
-}
-
-export default HomeRoute
+export default Home
