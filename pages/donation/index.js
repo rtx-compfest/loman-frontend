@@ -1,7 +1,7 @@
 import {Grid, Heading} from '@chakra-ui/react'
 import {DonationCard} from '@components/Card'
 import {Layout} from '@components/Layout'
-import {NavDonor} from '@components/Nav'
+import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
 
@@ -24,10 +24,24 @@ function Donation() {
   })
 
   return (
-    <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
+    <Layout hasNavbar={isAuthenticated() ? false : true}>
       {isAuthenticated() === 'donor' ? (
         <header>
           <NavDonor />
+        </header>
+      ) : (
+        ''
+      )}
+      {isAuthenticated() === 'admin' ? (
+        <header>
+          <NavAdmin />
+        </header>
+      ) : (
+        ''
+      )}
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
         </header>
       ) : (
         ''
@@ -40,16 +54,13 @@ function Donation() {
             gap="10"
           >
             {donationQuery.data
+              .filter((item) => item.case === 'Verified')
               .sort((a, b) => new Date(b.max_date) - new Date(a.max_date))
               .map((item) => {
                 // eslint-disable-next-line no-unused-vars
                 const {case: status, ...donation} = item
 
-                if (isAuthenticated() === 'donor') {
-                  return <DonationCard key={donation.id} {...donation} />
-                }
-
-                return <DonationCard key={donation.id} {...item} />
+                return <DonationCard key={donation.id} {...donation} />
               })}
           </Grid>
         ) : (

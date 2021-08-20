@@ -42,9 +42,11 @@ const Dashboard = ({props}) => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {section.data.map((data, j) => (
-              <DonationCard key={j} {...data} />
-            ))}
+            {section.data.length != 0
+              ? section.data.map((data, j) => (
+                  <DonationCard key={j} {...data} />
+                ))
+              : `No ${section.header} yet`}
           </Grid>
         </Grid>
       ))}

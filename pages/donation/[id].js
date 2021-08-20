@@ -67,6 +67,18 @@ const DetailDonation = () => {
     ? differenceInDays(new Date(donationQuery.data.max_date), new Date())
     : 0
 
+  const verifyDonation = () => {
+    console.log('verify')
+  }
+
+  const rejectDonation = () => {
+    console.log('verify')
+  }
+
+  const withdrawDonation = () => {
+    console.log('withdraw')
+  }
+
   return (
     <Layout hasNavbar={isAuthenticated() ? false : true}>
       {isAuthenticated() === 'donor' ? (
@@ -203,6 +215,25 @@ const DetailDonation = () => {
                   </Grid>
                 </Grid>
                 <ButtonGroup spacing="4">
+                  {isAuthenticated() === false ? (
+                    <Link
+                      as={NextLink}
+                      href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
+                      passHref={true}
+                    >
+                      <Button
+                        colorScheme="green"
+                        as="a"
+                        variant="solid"
+                        width="65%"
+                        isDisabled={sisaHari < 0 ? true : false}
+                      >
+                        Donate
+                      </Button>
+                    </Link>
+                  ) : (
+                    ''
+                  )}
                   {isAuthenticated() === 'donor' ? (
                     <Link
                       as={NextLink}
@@ -214,34 +245,20 @@ const DetailDonation = () => {
                         as="a"
                         variant="solid"
                         width="65%"
-                        isDisabled={sisaHari <= 0 ? true : false}
+                        isDisabled={sisaHari < 0 ? true : false}
                       >
                         Donate
                       </Button>
                     </Link>
                   ) : (
-                    <Link
-                      as={NextLink}
-                      href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
-                      passHref={true}
-                    >
-                      <Button
-                        colorScheme="green"
-                        as="a"
-                        variant="solid"
-                        width="65%"
-                        isDisabled={sisaHari <= 0 ? true : false}
-                      >
-                        Donate
-                      </Button>
-                    </Link>
+                    ''
                   )}
                   {isAuthenticated() === 'admin' ? (
                     <Button
                       colorScheme="green"
                       variant="solid"
                       width="50%"
-                      isDisabled={sisaHari <= 0 ? true : false}
+                      isDisabled={sisaHari < 0 ? true : false}
                       onClick={verifyDonation}
                     >
                       {donationQuery.data.case === 'Pending' ? 'Verify' : ''}
@@ -254,20 +271,34 @@ const DetailDonation = () => {
                       colorScheme="red"
                       variant="solid"
                       width="50%"
-                      isDisabled={sisaHari <= 0 ? true : false}
+                      isDisabled={sisaHari < 0 ? true : false}
                       onClick={rejectDonation}
                     >
                       {donationQuery.data.case === 'Pending' ? 'Reject' : ''}
                     </Button>
                   ) : (
+                    ''
+                  )}
+                  {isAuthenticated() === 'fundraiser' &&
+                  donationQuery.data.case === 'Verified' ? (
                     <Button
-                      variant="outline"
-                      width={
-                        isAuthenticated() === 'fundraiser' ? '100%' : '35%'
-                      }
+                      colorScheme="green"
+                      variant="solid"
+                      width="65%"
+                      isDisabled={sisaHari < 0 ? true : false}
+                      onClick={withdrawDonation}
                     >
+                      Withdraw
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                  {donationQuery.data.case === 'Verified' ? (
+                    <Button variant="outline" width="35%">
                       Share
                     </Button>
+                  ) : (
+                    ''
                   )}
                 </ButtonGroup>
               </Grid>

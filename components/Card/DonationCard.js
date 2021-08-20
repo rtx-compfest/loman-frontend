@@ -31,6 +31,9 @@ const DonationCard = ({
     width: 280,
     height: 155,
   }
+
+  const sisaHari = differenceInDays(new Date(max_date), new Date())
+
   return (
     <Link href={`donation/${id}`}>
       <a>
@@ -103,7 +106,7 @@ const DonationCard = ({
                 Sisa hari
               </Text>
               <Text as="strong" fontSize="lg" color="gray.700">
-                {differenceInDays(new Date(max_date), new Date())}
+                {sisaHari != null && sisaHari >= 0 ? sisaHari : '-'}
               </Text>
             </Grid>
           </Grid>

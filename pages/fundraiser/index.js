@@ -10,7 +10,7 @@ import {useAuthContext} from '@context/auth'
 import {ProtectedRoute} from '@components/Route'
 
 function Fundraiser() {
-  const {request, isAuthenticated} = useAuthContext()
+  const {userData, request, isAuthenticated} = useAuthContext()
 
   const donationQuery = useQuery(`/donation_program`, () => {
     const options = {
@@ -66,7 +66,7 @@ function Fundraiser() {
                     link: '/donation',
                     data: [
                       ...donationQuery.data.filter(
-                        (item) => item.case === 'Pending',
+                        (item) => item.user_id === userData.userId,
                       ),
                     ],
                   },

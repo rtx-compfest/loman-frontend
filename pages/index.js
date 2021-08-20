@@ -5,6 +5,7 @@ import {NavDonor} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
 import differenceInDays from 'date-fns/differenceInDays'
+import {ProtectedRoute} from '@components/Route'
 
 function Home() {
   const {request, isAuthenticated} = useAuthContext()
@@ -43,6 +44,7 @@ function Home() {
                     link: '/donation',
                     data: [
                       ...donationQuery.data
+                        .filter((item) => item.case === 'Verified')
                         .map((item) => {
                           // eslint-disable-next-line no-unused-vars
                           const {case: status, ...donation} = item
@@ -76,4 +78,10 @@ function Home() {
   )
 }
 
-export default Home
+export default function HomeRoute() {
+  return (
+    <ProtectedRoute route={[false, 'donor']}>
+      <Home />
+    </ProtectedRoute>
+  )
+}

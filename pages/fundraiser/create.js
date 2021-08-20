@@ -1,11 +1,9 @@
 import {useState} from 'react'
 import Link from 'next/link'
-import Head from 'next/head'
 import * as Yup from 'yup'
 import {Formik, Field, Form} from 'formik'
 import {
   Button,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -18,18 +16,73 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react'
+import {useMutation} from 'react-query'
 
 import {NavFundraiser} from '@components/Nav'
-import Footer from '@components/Footer'
+import {useAuthContext} from '@context/auth'
+import {Layout} from '@components/Layout'
+import {DonationCategoryList} from 'constant'
+import {ProtectedRoute} from '@components/Route'
 
-export default function Create() {
+function Create() {
   const toast = useToast()
+  const {userData, request, isAuthenticated} = useAuthContext()
+
   const [file, setFile] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const donationMutation = useMutation(['/donation_program'], (data) => {
+    const formdata = new FormData()
+    formdata.append('donation_name', data.fundraisingName)
+    formdata.append('max_date', data.fundraisingDeadline)
+    formdata.append('expected_amount', data.fundraisingTarget)
+    formdata.append('user_id', userData.userId)
+    formdata.append('donation_description', data.description)
+    formdata.append('photos', data.file)
+    formdata.append('recipient', data.benefitRecipients)
+    formdata.append('donation_category', data.category)
+
+    const options = {
+      method: 'POST',
+      body: formdata,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Access-Control-Allow-Origin': '*',
+      },
+    }
+
+    setIsSubmitting(true)
+
+    return request(`/donation_program`, options)
+      .then((result) => {
+        toast({
+          title: 'Create Donation Program Success',
+          status: 'success',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
+        queryCache.invalidateQueries(`/donation_program`)
+        router.push('/fundraiser')
+        setIsSubmitting(false)
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        toast({
+          title: err.message,
+          status: 'error',
+          position: 'top',
+          duration: 3000,
+          isClosable: true,
+        })
+        setIsSubmitting(false)
+        return err
+      })
+  })
 
   const formSubmit = (values) => {
-    if (file != null) {
-      values.file = file
-    } else {
+    if (file == null) {
       toast({
         title: 'Photo is required',
         description:
@@ -39,7 +92,11 @@ export default function Create() {
         duration: 3000,
         isClosable: true,
       })
+      return
     }
+
+    values.file = file
+    donationMutation.mutate(values)
   }
 
   const handleFile = (files) => {
@@ -77,16 +134,14 @@ export default function Create() {
   }
 
   return (
-    <Container maxWidth="container.lg">
-      <Head>
-        <title>Create Donation Program | Loman | Fundraiser</title>
-        <meta name="description" content="Fundraiser" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <header>
-        <NavFundraiser />
-      </header>
+    <Layout hasNavbar={false} title="Create Donation Program | Loman">
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
+        </header>
+      ) : (
+        ''
+      )}
 
       <Grid as="main" marginBlock="85px" gap="8" placeItems="center">
         <Grid
@@ -114,7 +169,11 @@ export default function Create() {
                 'Fundraising Name is Required',
               ),
               category: Yup.string()
-                .oneOf(['Karya Kreatif & Modal Usaha'])
+                .oneOf(
+                  DonationCategoryList.map((category) =>
+                    category.id.toString(),
+                  ),
+                )
                 .required('Category is Required'),
               fundraisingTarget: Yup.number().required(
                 'Fundraising Target is Required',
@@ -167,9 +226,13 @@ export default function Create() {
                         id="category"
                         placeholder="Select an category"
                       >
-                        <option value="Karya Kreatif & Modal Usaha">
-                          Karya Kreatif & Modal Usaha
-                        </option>
+                        {DonationCategoryList.map((category) => {
+                          return (
+                            <option key={category.id} value={category.id}>
+                              {category.category}
+                            </option>
+                          )
+                        })}
                       </Select>
                       <FormErrorMessage>
                         {form.errors.category}
@@ -288,10 +351,7 @@ export default function Create() {
                         Phone Number
                       </FormLabel>
                       <InputGroup>
-                        <InputLeftAddon
-                          // eslint-disable-next-line react/no-children-prop
-                          children="+62"
-                        />
+                        <InputLeftAddon>+62</InputLeftAddon>
                         <Input
                           {...field}
                           id="phoneNumber"
@@ -327,6 +387,7 @@ export default function Create() {
                 variant="solid"
                 colorScheme="green"
                 width="100%"
+                isLoading={isSubmitting}
               >
                 Create New Fundraising
               </Button>
@@ -345,10 +406,14 @@ export default function Create() {
           </Formik>
         </Grid>
       </Grid>
+    </Layout>
+  )
+}
 
-      <footer>
-        <Footer />
-      </footer>
-    </Container>
+export default function CreateFundraiserRoute() {
+  return (
+    <ProtectedRoute route="fundraiser">
+      <Create />
+    </ProtectedRoute>
   )
 }

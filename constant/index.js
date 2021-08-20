@@ -15,6 +15,57 @@ export const DonationCategory = new Map([
   [12, 'Rumah Ibadah'],
 ])
 
+export const DonationCategoryList = [
+  {
+    id: 1,
+    category: 'Bantuan Pendidikan',
+  },
+  {
+    id: 2,
+    category: 'Bencana Alam',
+  },
+  {
+    id: 3,
+    category: 'Difabel',
+  },
+  {
+    id: 4,
+    category: 'Infrastruktur Umum',
+  },
+  {
+    id: 5,
+    category: 'Karya Kreatif & Modal Usaha',
+  },
+  {
+    id: 6,
+    category: 'Kegiatan Sosial',
+  },
+  {
+    id: 7,
+    category: 'Kemanusiaan',
+  },
+  {
+    id: 8,
+    category: 'Lingkungan',
+  },
+  {
+    id: 9,
+    category: 'Menolong Hewan',
+  },
+  {
+    id: 10,
+    category: 'Panti Asuhan',
+  },
+  {
+    id: 11,
+    category: 'Pelari Baik',
+  },
+  {
+    id: 12,
+    category: 'Rumah Ibadah',
+  },
+]
+
 export const amount = [
   '10000',
   '25000',

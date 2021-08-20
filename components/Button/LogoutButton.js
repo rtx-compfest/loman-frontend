@@ -8,6 +8,14 @@ const LogoutButton = ({props}) => {
   const {logout} = useAuthContext()
   const router = useRouter()
 
+  const handleLogout = () => {
+    logout()
+
+    setTimeout(() => {
+      router.push('/sign-in')
+    }, 500)
+  }
+
   return (
     <Button
       width="100%"
@@ -16,10 +24,7 @@ const LogoutButton = ({props}) => {
       justifyContent="space-between"
       alignItems="center"
       rightIcon={<Icon as={LogoutIcon} stroke="gray.400" boxSize="5" />}
-      onClick={() => {
-        logout()
-        router.push('/sign-in')
-      }}
+      onClick={handleLogout}
       {...props}
     >
       Log out

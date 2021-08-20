@@ -17,14 +17,14 @@ import {PlusIcon} from '@heroicons/react/outline'
 // import {format} from 'date-fns'
 
 import {Layout} from '@components/Layout'
-import {NavDonor} from '@components/Nav'
+import {NavDonor, NavFundraiser} from '@components/Nav'
 import formatCurrency from '@lib/formatCurrency'
 import {useAuthContext} from '@context/auth'
 import {ProtectedRoute} from '@components/Route'
 
 export const EWallet = () => {
   const [user, setUser] = React.useState(null)
-  const {userData, request} = useAuthContext()
+  const {userData, request, isAuthenticated} = useAuthContext()
 
   React.useEffect(() => {
     const options = {
@@ -49,9 +49,20 @@ export const EWallet = () => {
 
   return (
     <Layout hasNavbar={false}>
-      <header>
-        <NavDonor />
-      </header>
+      {isAuthenticated() === 'donor' ? (
+        <header>
+          <NavDonor />
+        </header>
+      ) : (
+        ''
+      )}
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
+        </header>
+      ) : (
+        ''
+      )}
 
       <Grid as="main" marginBlock="85px">
         <Grid>

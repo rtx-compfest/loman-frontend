@@ -33,6 +33,10 @@ const NavDonor = () => {
       return
     }
 
+    if (userData.role != 2) {
+      return
+    }
+
     request(`/user/${userData?.userId}`, options)
       .then((result) => {
         setUser(result.data)
@@ -102,7 +106,7 @@ const NavDonor = () => {
                 width="100%"
               >
                 <Text>Balance</Text>
-                <Text as="strong">{user != null ? user?.amount : '0'}</Text>
+                <Text as="strong">{user != null ? user?.amount : '-'}</Text>
               </Grid>
             </MenuItem>
             <MenuDivider />
