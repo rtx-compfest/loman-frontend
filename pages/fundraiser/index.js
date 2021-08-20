@@ -1,35 +1,25 @@
 import Link from 'next/link'
-import Head from 'next/head'
-import {Container, Grid, Heading, Button, Icon} from '@chakra-ui/react'
+import {Grid, Heading, Button, Icon} from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
 
 import {NavFundraiser} from '@components/Nav'
-import {DonationCard} from '@components/Card'
 import Footer from '@components/Footer'
-
-const donations = [
-  {
-    id: 1,
-    name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
-    target_amount: 500000000,
-    amount: 18584332,
-    deadline: '2021-08-31',
-    fundraiser: 'Kitabisa.com',
-  },
-]
+import Dashboard from '@components/Dashboard'
+import {Layout} from '@components/Layout'
+import {useAuthContext} from '@context/auth'
 
 export default function Home() {
-  return (
-    <Container maxWidth="container.lg">
-      <Head>
-        <title>Loman | Fundraiser</title>
-        <meta name="description" content="Fundraiser" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  const {isAuthenticated} = useAuthContext()
 
-      <header>
-        <NavFundraiser />
-      </header>
+  return (
+    <Layout hasNavbar={isAuthenticated() === 'fundraiser' ? false : true}>
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
+        </header>
+      ) : (
+        ''
+      )}
 
       <Grid as="main" marginBlock="85px" gap="8">
         <Grid
@@ -51,19 +41,30 @@ export default function Home() {
             </Button>
           </Link>
         </Grid>
-        <Grid
-          templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
-          gap="10"
-        >
-          {donations.map((donation) => {
-            return <DonationCard key={donation.id} {...donation} />
-          })}
-        </Grid>
+        <Dashboard
+          props={[
+            {
+              header: 'Donation',
+              link: '/donation',
+              data: [
+                {
+                  id: 1,
+                  name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
+                  target_amount: 500000000,
+                  amount: 18584332,
+                  deadline: '2021-08-31',
+                  fundraiser: 'Kitabisa.com',
+                  category: 'Pendidikan',
+                },
+              ],
+            },
+          ]}
+        />
       </Grid>
 
       <footer>
         <Footer />
       </footer>
-    </Container>
+    </Layout>
   )
 }

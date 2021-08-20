@@ -14,27 +14,38 @@
 //    ]
 //  }
 // ]
-import {Grid, GridItem, Text, VStack} from '@chakra-ui/react'
+import NextLink from 'next/link'
+import {Button, Grid, Heading, Link, VStack} from '@chakra-ui/react'
 import {DonationCard} from '@components/Card'
 
 const Dashboard = ({props}) => {
   return (
     <VStack>
       {props.map((section, i) => (
-        <Grid key={i} templateColumns="1fr 1fr" templateRows="1fr 1fr">
-          <GridItem>
-            <Text>{section.header}</Text>
-          </GridItem>
+        <Grid key={i} gap="5" width="100%">
+          <Grid
+            autoFlow="column"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Heading as="h3" fontSize="xl">
+              {section.header}
+            </Heading>
+            <Link as={NextLink} href={section.link} passHref={true}>
+              <Button as="a" variant="outline" colorScheme="gray">
+                See all {section.header.toLowerCase()}
+              </Button>
+            </Link>
+          </Grid>
 
-          <GridItem>
-            <Text>See all {section.header.toLowerCase()}</Text>
-          </GridItem>
-
-          <GridItem>
+          <Grid
+            templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+            gap="10"
+          >
             {section.data.map((data, j) => (
               <DonationCard key={j} {...data} />
             ))}
-          </GridItem>
+          </Grid>
         </Grid>
       ))}
     </VStack>

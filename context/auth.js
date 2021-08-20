@@ -131,7 +131,7 @@ export const AuthProvider = ({children}) => {
     try {
       const headers = {
         'Content-Type': 'application/json',
-        Cookie: `token=${getToken()}`,
+        Authorization: `${getToken()}`,
       }
 
       const res = await fetch(`${URL}${endpoint}`, {headers, ...options})
