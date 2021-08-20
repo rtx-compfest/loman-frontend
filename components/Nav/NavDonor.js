@@ -72,7 +72,7 @@ const NavDonor = () => {
         </Link>
         <Menu placement="bottom-end">
           <MenuButton>
-            <Avatar size="sm" name={name} />
+            <Avatar size="sm" name={user != null ? user.name : ''} />
           </MenuButton>
           <MenuList>
             <MenuItem>
@@ -84,7 +84,7 @@ const NavDonor = () => {
                 width="100%"
                 background="white"
               >
-                <Text as="strong">{user != null ? user.name : 'Name'}</Text>
+                <Text as="strong">{user != null ? user?.name : 'Name'}</Text>
                 <Text>Donor</Text>
               </Grid>
             </MenuItem>
