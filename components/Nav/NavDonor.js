@@ -48,6 +48,11 @@ const NavDonor = () => {
     <Nav>
       <List display="grid" gridGap="4" gridAutoFlow="column">
         <ListItem>
+          <Link href="/">
+            <a>Dashboard</a>
+          </Link>
+        </ListItem>
+        <ListItem>
           <Link href="/donation">
             <a>Donation</a>
           </Link>

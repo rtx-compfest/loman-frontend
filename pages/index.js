@@ -4,6 +4,7 @@ import {Layout} from '@components/Layout'
 import {NavDonor} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
+import differenceInDays from 'date-fns/differenceInDays'
 
 function Home() {
   const {request, isAuthenticated} = useAuthContext()
@@ -22,9 +23,6 @@ function Home() {
         return new Error(err)
       })
   })
-
-  console.log(donationQuery)
-
   return (
     <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
       {isAuthenticated() === 'donor' ? (
@@ -44,12 +42,23 @@ function Home() {
                     header: 'Donation',
                     link: '/donation',
                     data: [
-                      ...donationQuery.data.map((item) => {
-                        // eslint-disable-next-line no-unused-vars
-                        const {case: status, ...donation} = item
+                      ...donationQuery.data
+                        .map((item) => {
+                          // eslint-disable-next-line no-unused-vars
+                          const {case: status, ...donation} = item
 
-                        return donation
-                      }),
+                          return donation
+                        })
+                        .filter((item) => {
+                          if (
+                            differenceInDays(
+                              new Date(item.max_date),
+                              new Date(),
+                            ) >= 0
+                          ) {
+                            return item
+                          }
+                        }),
                     ],
                   },
                 ]

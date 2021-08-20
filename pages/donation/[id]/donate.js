@@ -23,8 +23,9 @@ import {NavDonor} from '@components/Nav'
 import {Layout} from '@components/Layout'
 import {RadioCard} from '@components/Card'
 import formatCurrency from '@lib/formatCurrency'
+import {ProtectedRoute} from '@components/Route'
 
-const Donate = () => {
+export const Donate = () => {
   const amount = ['10000', '25000', '50000', '100000', '200000', '500000']
 
   const router = useRouter()
@@ -183,4 +184,10 @@ const Donate = () => {
   )
 }
 
-export default Donate
+export default function DonateRoute() {
+  return (
+    <ProtectedRoute route="donor">
+      <Donate />
+    </ProtectedRoute>
+  )
+}

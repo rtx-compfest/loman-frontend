@@ -62,7 +62,9 @@ const DetailDonation = () => {
       })
   })
 
-  console.log(donationQuery)
+  const sisaHari = donationQuery.isSuccess
+    ? differenceInDays(new Date(donationQuery.data.max_date), new Date())
+    : 0
 
   return (
     <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
@@ -165,20 +167,22 @@ const DetailDonation = () => {
                       Sisa hari
                     </Text>
                     <Text as="strong" fontSize="lg" color="gray.700">
-                      {differenceInDays(
-                        new Date(donationQuery.data.max_date),
-                        new Date(),
-                      )}
+                      {sisaHari >= 0 ? sisaHari : 'Fundraising ends'}
                     </Text>
                   </Grid>
                 </Grid>
                 <ButtonGroup spacing="4">
-                  <Link as={NextLink} href={`${id}/donate`} passHref={true}>
+                  <Link
+                    as={NextLink}
+                    href={sisaHari <= 0 ? `${id}` : `${id}/donate`}
+                    passHref={true}
+                  >
                     <Button
                       colorScheme="green"
                       as="a"
                       variant="solid"
                       width="65%"
+                      isDisabled={sisaHari <= 0 ? true : false}
                     >
                       Donate
                     </Button>

@@ -56,8 +56,12 @@ const DonationCard = ({
             gap="4"
             autoFlow="column"
           >
-            <Tag>{DonationCategory.get(donation_category)}</Tag>
-            {status !== '' ? (
+            {donation_category != null && donation_category !== '' ? (
+              <Tag>{DonationCategory.get(donation_category)}</Tag>
+            ) : (
+              ''
+            )}
+            {status != null && status !== '' ? (
               <Tag variant="solid" colorScheme={statusColor(status)}>
                 {status}
               </Tag>
