@@ -190,10 +190,7 @@ export default function Create() {
                         Fundraising Target
                       </FormLabel>
                       <InputGroup>
-                        <InputLeftAddon
-                          // eslint-disable-next-line react/no-children-prop
-                          children="Rp"
-                        />
+                        <InputLeftAddon>Rp</InputLeftAddon>
                         <Input
                           {...field}
                           id="fundraisingTarget"

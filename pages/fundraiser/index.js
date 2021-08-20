@@ -1,16 +1,31 @@
 import Link from 'next/link'
 import {Grid, Heading, Button, Icon} from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
+import {useQuery} from 'react-query'
 
 import {NavFundraiser} from '@components/Nav'
-import Footer from '@components/Footer'
 import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
 import {ProtectedRoute} from '@components/Route'
 
 function Fundraiser() {
-  const {isAuthenticated} = useAuthContext()
+  const {request, isAuthenticated} = useAuthContext()
+
+  const donationQuery = useQuery(`/donation_program`, () => {
+    const options = {
+      method: 'GET',
+    }
+
+    return request(`/donation_program`, options)
+      .then((result) => {
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  })
 
   return (
     <Layout hasNavbar={isAuthenticated() === 'fundraiser' ? false : true}>
@@ -43,29 +58,29 @@ function Fundraiser() {
           </Link>
         </Grid>
         <Dashboard
-          props={[
-            {
-              header: 'Donation',
-              link: '/donation',
-              data: [
-                {
-                  id: 1,
-                  name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
-                  target_amount: 500000000,
-                  amount: 18584332,
-                  deadline: '2021-08-31',
-                  fundraiser: 'Kitabisa.com',
-                  category: 'Pendidikan',
-                },
-              ],
-            },
-          ]}
+          props={
+            donationQuery?.isSuccess
+              ? [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [
+                      ...donationQuery.data.filter(
+                        (item) => item.case === 'Pending',
+                      ),
+                    ],
+                  },
+                ]
+              : [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [],
+                  },
+                ]
+          }
         />
       </Grid>
-
-      <footer>
-        <Footer />
-      </footer>
     </Layout>
   )
 }
