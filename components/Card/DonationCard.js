@@ -15,7 +15,7 @@ const DonationCard = ({
   id = 0,
   donation_name = 'Donation',
   name = 'fundraiser',
-  amount = 0,
+  collected_amount = 0,
   expected_amount = 100,
   max_date = 0,
   case: status,
@@ -80,7 +80,7 @@ const DonationCard = ({
           </Box>
           <Progress
             colorScheme="green"
-            value={amount}
+            value={collected_amount}
             max={expected_amount}
             size="sm"
             borderRadius="3"
@@ -95,7 +95,7 @@ const DonationCard = ({
                 Terkumpul
               </Text>
               <Text as="strong" fontSize="lg" color="green">
-                {formatCurrency(amount).slice(0, -3)}
+                {formatCurrency(collected_amount).slice(0, -3)}
               </Text>
             </Grid>
             <Grid textAlign="right" gap="1">

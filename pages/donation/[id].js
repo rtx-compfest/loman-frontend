@@ -105,10 +105,26 @@ const DetailDonation = () => {
             >
               <Image
                 loader={imgLoader}
-                src={donationQuery.data.image.src}
-                alt={donationQuery.data.image.alt}
-                width={donationQuery.data.image.width}
-                height={donationQuery.data.image.height}
+                src={
+                  donationQuery.data?.image?.src == null
+                    ? 'https://via.placeholder.com/280x155?text=Donation+Image'
+                    : donationQuery.data.image.src
+                }
+                alt={
+                  donationQuery.data.image?.alt == null
+                    ? 'Image'
+                    : donationQuery.data.image?.alt
+                }
+                width={
+                  donationQuery.data.image?.width == null
+                    ? '445'
+                    : donationQuery.data.image?.width
+                }
+                height={
+                  donationQuery.data.image?.height == null
+                    ? '260'
+                    : donationQuery.data.image?.height
+                }
               />
               <Grid gap="4" height="fit-content">
                 <Grid
