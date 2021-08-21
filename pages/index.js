@@ -1,20 +1,29 @@
+import {Grid, Heading} from '@chakra-ui/react'
+import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {NavDonor} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
-
-// const donation = {
-//   name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
-//   target_amount: 500000000,
-//   amount: 18584332,
-//   deadline: '2021-08-31',
-//   fundraiser: 'Kitabisa.com',
-//   status: 'Pending',
-//   category: 'Pendidikan',
-// }
+import {useQuery} from 'react-query'
+import differenceInDays from 'date-fns/differenceInDays'
+import {ProtectedRoute} from '@components/Route'
 
 function Home() {
-  const {isAuthenticated} = useAuthContext()
+  const {request, isAuthenticated} = useAuthContext()
 
+  const donationQuery = useQuery(`/donation_program`, () => {
+    const options = {
+      method: 'GET',
+    }
+
+    return request(`/donation_program`, options)
+      .then((result) => {
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  })
   return (
     <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
       {isAuthenticated() === 'donor' ? (
@@ -24,19 +33,55 @@ function Home() {
       ) : (
         ''
       )}
-      {/*Use the dashboard component and prepare the props*/}
-      {/*<Grid as="main" marginBlock="85px" gap="8">*/}
-      {/*  <Heading size="xl">Fundraising</Heading>*/}
-      {/*  <Grid*/}
-      {/*    templateColumns="repeat(auto-fill, minmax(280px, 1fr))"*/}
-      {/*    gap="10"*/}
-      {/*  >*/}
-      {/*    <DonationCard/>*/}
-      {/*    <DonationCard {...donation} /> */}
-      {/*  </Grid>*/}
-      {/*</Grid>*/}
+      <Grid as="main" marginBlock="85px" gap="8">
+        <Heading size="xl">Dashboard</Heading>
+        <Dashboard
+          props={
+            donationQuery?.isSuccess
+              ? [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [
+                      ...donationQuery.data
+                        .filter((item) => item.case === 'Verified')
+                        .map((item) => {
+                          // eslint-disable-next-line no-unused-vars
+                          const {case: status, ...donation} = item
+
+                          return donation
+                        })
+                        .filter((item) => {
+                          if (
+                            differenceInDays(
+                              new Date(item.max_date),
+                              new Date(),
+                            ) >= 0
+                          ) {
+                            return item
+                          }
+                        }),
+                    ],
+                  },
+                ]
+              : [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [],
+                  },
+                ]
+          }
+        ></Dashboard>
+      </Grid>
     </Layout>
   )
 }
 
-export default Home
+export default function HomeRoute() {
+  return (
+    <ProtectedRoute route={[false, 'donor']}>
+      <Home />
+    </ProtectedRoute>
+  )
+}

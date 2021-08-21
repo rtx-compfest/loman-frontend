@@ -17,14 +17,48 @@ import {
 import Nav from './Nav'
 import {LogoutButton} from '@components/Button'
 import {PlusIcon} from '@heroicons/react/outline'
+import {useAuthContext} from '@context/auth'
+import {useEffect, useState} from 'react'
 
-const NavDonor = ({name, balance = 0}) => {
+const NavDonor = () => {
+  const [user, setUser] = useState(null)
+  const {userData, request} = useAuthContext()
+
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+    }
+
+    if (userData == undefined) {
+      return
+    }
+
+    if (userData.role != 2) {
+      return
+    }
+
+    request(`/user/${userData?.userId}`, options)
+      .then((result) => {
+        setUser(result.data)
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  }, [userData, request])
+
   return (
     <Nav>
       <List display="grid" gridGap="4" gridAutoFlow="column">
         <ListItem>
           <Link href="/">
-            <a>Fundraising</a>
+            <a>Dashboard</a>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link href="/donation">
+            <a>Donation</a>
           </Link>
         </ListItem>
         <ListItem>
@@ -47,7 +81,7 @@ const NavDonor = ({name, balance = 0}) => {
         </Link>
         <Menu placement="bottom-end">
           <MenuButton>
-            <Avatar size="sm" name={name} />
+            <Avatar size="sm" name={user != null ? user.name : ''} />
           </MenuButton>
           <MenuList>
             <MenuItem>
@@ -59,7 +93,7 @@ const NavDonor = ({name, balance = 0}) => {
                 width="100%"
                 background="white"
               >
-                <Text as="strong">{name == null ? 'Name' : name}</Text>
+                <Text as="strong">{user != null ? user?.name : 'Name'}</Text>
                 <Text>Donor</Text>
               </Grid>
             </MenuItem>
@@ -72,7 +106,7 @@ const NavDonor = ({name, balance = 0}) => {
                 width="100%"
               >
                 <Text>Balance</Text>
-                <Text as="strong">{balance}</Text>
+                <Text as="strong">{user != null ? user?.amount : '-'}</Text>
               </Grid>
             </MenuItem>
             <MenuDivider />

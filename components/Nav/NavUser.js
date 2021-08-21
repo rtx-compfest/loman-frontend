@@ -17,8 +17,8 @@ const NavUser = () => {
     <Nav>
       <List display="grid" gridGap="4" gridAutoFlow="column">
         <ListItem>
-          <Link href="/">
-            <a>Fundraising</a>
+          <Link href="/donation">
+            <a>Donation</a>
           </Link>
         </ListItem>
       </List>

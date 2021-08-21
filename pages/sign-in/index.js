@@ -28,7 +28,7 @@ import {useAuthContext} from '@context/auth'
 import Logo from '../../public/loman.svg'
 
 const SignIn = () => {
-  const {signIn, logout} = useAuthContext()
+  const {signIn, logout, isAuthenticated} = useAuthContext()
   const toast = useToast()
   const router = useRouter()
 
@@ -87,6 +87,14 @@ const SignIn = () => {
 
   const formSubmit = (value) => {
     mutation.mutate(value)
+  }
+
+  if (isAuthenticated() === 'donor') {
+    router.push('/')
+  } else if (isAuthenticated() === 'admin') {
+    router.push('/admin')
+  } else if (isAuthenticated() === 'fundraiser') {
+    router.push('/fundraiser')
   }
 
   return (

@@ -131,7 +131,7 @@ export const AuthProvider = ({children}) => {
     try {
       const headers = {
         'Content-Type': 'application/json',
-        Cookie: `token=${getToken()}`,
+        Authorization: `${getToken()}`,
       }
 
       const res = await fetch(`${URL}${endpoint}`, {headers, ...options})
@@ -155,6 +155,7 @@ export const AuthProvider = ({children}) => {
     isAuthenticated,
     loading,
     request,
+    getToken,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

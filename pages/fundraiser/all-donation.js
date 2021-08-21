@@ -1,12 +1,12 @@
 import {Grid, Heading} from '@chakra-ui/react'
 import {DonationCard} from '@components/Card'
 import {Layout} from '@components/Layout'
-import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
+import {NavFundraiser} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
 
-function Donation() {
-  const {request, isAuthenticated} = useAuthContext()
+function DonationList() {
+  const {userData, request, isAuthenticated} = useAuthContext()
 
   const donationQuery = useQuery(`/donation_program`, () => {
     const options = {
@@ -24,21 +24,7 @@ function Donation() {
   })
 
   return (
-    <Layout hasNavbar={isAuthenticated() ? false : true}>
-      {isAuthenticated() === 'donor' ? (
-        <header>
-          <NavDonor />
-        </header>
-      ) : (
-        ''
-      )}
-      {isAuthenticated() === 'admin' ? (
-        <header>
-          <NavAdmin />
-        </header>
-      ) : (
-        ''
-      )}
+    <Layout hasNavbar={false}>
       {isAuthenticated() === 'fundraiser' ? (
         <header>
           <NavFundraiser />
@@ -53,15 +39,11 @@ function Donation() {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {donationQuery.data
-              .filter((item) => item.case === 'Verified')
-              .sort((a, b) => new Date(b.max_date) - new Date(a.max_date))
-              .map((item) => {
-                // eslint-disable-next-line no-unused-vars
-                const {case: status, ...donation} = item
-
-                return <DonationCard key={donation.id} {...donation} />
-              })}
+            {donationQuery.data.map((item) => {
+              if (item.user_id === userData.userId) {
+                return <DonationCard key={item.id} {...item} />
+              }
+            })}
           </Grid>
         ) : (
           ''
@@ -71,4 +53,4 @@ function Donation() {
   )
 }
 
-export default Donation
+export default DonationList
