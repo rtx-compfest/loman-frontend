@@ -19,11 +19,12 @@ import {
   Box,
   Tag,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import {ChevronLeftIcon} from '@heroicons/react/outline'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
 import differenceInDays from 'date-fns/differenceInDays'
-import {useQuery} from 'react-query'
+import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {DonationCategory} from 'constant'
 
 import formatCurrency from '@lib/formatCurrency'
@@ -42,9 +43,12 @@ const imgLoader = ({src}) => {
 
 const DetailDonation = () => {
   const router = useRouter()
-  const {request, isAuthenticated} = useAuthContext()
+  const toast = useToast()
+  const {request, isAuthenticated, getToken} = useAuthContext()
   const {isOpen, onOpen, onClose} = useDisclosure()
+  const queryCache = useQueryClient()
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isOpenReject, setIsOpenReject] = React.useState(false)
 
   const onCloseReject = () => setIsOpenReject(false)
@@ -73,16 +77,64 @@ const DetailDonation = () => {
       })
   })
 
+  const donationStatusMutation = useMutation(
+    [`/donation_program/${id}`],
+    (data) => {
+      const options = {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: getToken(),
+        },
+      }
+
+      setIsSubmitting(true)
+
+      return request(`/donation_program/${id}`, options)
+        .then((result) => {
+          toast({
+            title: 'Set donation status is success',
+            status: 'success',
+            position: 'top',
+            duration: 3000,
+            isClosable: true,
+          })
+          queryCache.invalidateQueries(`/donation_program/${id}`)
+          router.push(`/donation/${id}`)
+          setIsSubmitting(false)
+          return result.data
+        })
+        .catch((err) => {
+          toast({
+            title: err.message,
+            status: 'error',
+            position: 'top',
+            duration: 3000,
+            isClosable: true,
+          })
+          setIsSubmitting(false)
+          return err
+        })
+    },
+  )
+
   const sisaHari = donationQuery.isSuccess
     ? differenceInDays(new Date(donationQuery.data.max_date), new Date())
     : 0
 
   const verifyDonation = () => {
-    console.log('verify')
+    const formData = new FormData()
+    formData.append('status', 1)
+
+    donationStatusMutation.mutate(formData)
   }
 
   const rejectDonation = () => {
-    console.log('verify')
+    const formData = new FormData()
+    formData.append('status', 2)
+
+    donationStatusMutation.mutate(formData)
+    onCloseReject()
   }
 
   return (
@@ -267,6 +319,7 @@ const DetailDonation = () => {
                       width="50%"
                       isDisabled={sisaHari < 0 ? true : false}
                       onClick={verifyDonation}
+                      isLoading={isSubmitting}
                     >
                       Verify
                     </Button>
@@ -281,6 +334,7 @@ const DetailDonation = () => {
                       width="50%"
                       isDisabled={sisaHari < 0 ? true : false}
                       onClick={onOpenReject}
+                      isLoading={isSubmitting}
                     >
                       Reject
                     </Button>
