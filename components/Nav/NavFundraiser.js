@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import {
   Avatar,
@@ -10,22 +11,54 @@ import {
   MenuItem,
   Grid,
   Text,
-  // Icon,
   Button,
   Icon,
 } from '@chakra-ui/react'
+import {CashIcon} from '@heroicons/react/outline'
 
 import Nav from './Nav'
 import {LogoutButton} from '@components/Button'
-import {CashIcon} from '@heroicons/react/outline'
+import {useAuthContext} from '@context/auth'
 
-const NavFundraiser = ({name, balance = 0}) => {
+const NavFundraiser = () => {
+  const [user, setUser] = useState(null)
+  const {userData, request} = useAuthContext()
+
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+    }
+
+    if (userData == undefined) {
+      return
+    }
+
+    if (userData.role != 3) {
+      return
+    }
+
+    request(`/user/${userData?.userId}`, options)
+      .then((result) => {
+        setUser(result.data)
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  }, [userData, request])
+
   return (
     <Nav>
       <List display="grid" gridGap="4" gridAutoFlow="column">
         <ListItem>
-          <Link href="/">
-            <a>Fundraising</a>
+          <Link href="/fundraiser">
+            <a>Dashboard</a>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link href="/donation">
+            <a>Donation</a>
           </Link>
         </ListItem>
         <ListItem>
@@ -48,7 +81,7 @@ const NavFundraiser = ({name, balance = 0}) => {
         </Link>
         <Menu placement="bottom-end">
           <MenuButton>
-            <Avatar size="sm" name={name} />
+            <Avatar size="sm" name={user != null ? user.name : ''} />
           </MenuButton>
           <MenuList>
             <MenuItem>
@@ -60,7 +93,7 @@ const NavFundraiser = ({name, balance = 0}) => {
                 width="100%"
                 background="white"
               >
-                <Text as="strong">{name == null ? 'Name' : name}</Text>
+                <Text as="strong">{user != null ? user.name : 'Name'}</Text>
                 <Text>Fundraiser</Text>
               </Grid>
             </MenuItem>
@@ -73,7 +106,7 @@ const NavFundraiser = ({name, balance = 0}) => {
                 width="100%"
               >
                 <Text>Balance</Text>
-                <Text as="strong">{balance}</Text>
+                <Text as="strong">{user != null ? user.amount : '-'}</Text>
               </Grid>
             </MenuItem>
             <MenuDivider />

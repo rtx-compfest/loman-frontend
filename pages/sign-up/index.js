@@ -200,7 +200,7 @@ const DonorSignUp = () => {
 }
 
 const FundraiserSignUp = () => {
-  const {signUp} = useAuthContext()
+  const {signUp, isAuthenticated} = useAuthContext()
   const toast = useToast()
   const router = useRouter()
 
@@ -258,6 +258,14 @@ const FundraiserSignUp = () => {
     }
 
     mutation.mutate(data)
+  }
+
+  if (isAuthenticated() === 'donor') {
+    router.push('/')
+  } else if (isAuthenticated() === 'admin') {
+    router.push('/admin')
+  } else if (isAuthenticated() === 'fundraiser') {
+    router.push('/fundraiser')
   }
 
   return (

@@ -1,35 +1,41 @@
 import Link from 'next/link'
-import Head from 'next/head'
-import {Container, Grid, Heading, Button, Icon} from '@chakra-ui/react'
+import {Grid, Heading, Button, Icon} from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
+import {useQuery} from 'react-query'
 
 import {NavFundraiser} from '@components/Nav'
-import {DonationCard} from '@components/Card'
-import Footer from '@components/Footer'
+import Dashboard from '@components/Dashboard'
+import {Layout} from '@components/Layout'
+import {useAuthContext} from '@context/auth'
+import {ProtectedRoute} from '@components/Route'
 
-const donations = [
-  {
-    id: 1,
-    name: 'Bantuan untuk Tenaga Kesehatan Yang Jalani Isolasi',
-    target_amount: 500000000,
-    amount: 18584332,
-    deadline: '2021-08-31',
-    fundraiser: 'Kitabisa.com',
-  },
-]
+function Fundraiser() {
+  const {userData, request, isAuthenticated} = useAuthContext()
 
-export default function Home() {
+  const donationQuery = useQuery(`/donation_program`, () => {
+    const options = {
+      method: 'GET',
+    }
+
+    return request(`/donation_program`, options)
+      .then((result) => {
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  })
+
   return (
-    <Container maxWidth="container.lg">
-      <Head>
-        <title>Loman | Fundraiser</title>
-        <meta name="description" content="Fundraiser" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <header>
-        <NavFundraiser />
-      </header>
+    <Layout hasNavbar={isAuthenticated() === 'fundraiser' ? false : true}>
+      {isAuthenticated() === 'fundraiser' ? (
+        <header>
+          <NavFundraiser />
+        </header>
+      ) : (
+        ''
+      )}
 
       <Grid as="main" marginBlock="85px" gap="8">
         <Grid
@@ -51,19 +57,38 @@ export default function Home() {
             </Button>
           </Link>
         </Grid>
-        <Grid
-          templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
-          gap="10"
-        >
-          {donations.map((donation) => {
-            return <DonationCard key={donation.id} {...donation} />
-          })}
-        </Grid>
+        <Dashboard
+          props={
+            donationQuery?.isSuccess
+              ? [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [
+                      ...donationQuery.data.filter(
+                        (item) => item.user_id === userData.userId,
+                      ),
+                    ],
+                  },
+                ]
+              : [
+                  {
+                    header: 'Donation',
+                    link: '/donation',
+                    data: [],
+                  },
+                ]
+          }
+        />
       </Grid>
+    </Layout>
+  )
+}
 
-      <footer>
-        <Footer />
-      </footer>
-    </Container>
+export default function FundraiserRoute() {
+  return (
+    <ProtectedRoute route="fundraiser">
+      <Fundraiser />
+    </ProtectedRoute>
   )
 }
