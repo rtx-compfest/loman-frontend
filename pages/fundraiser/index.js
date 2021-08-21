@@ -27,6 +27,22 @@ function Fundraiser() {
       })
   })
 
+  const withdrawQuery = useQuery(`/wallet/withdraw?status=0`, () => {
+    const options = {
+      method: 'GET',
+    }
+
+    return request(`/wallet/withdraw?status=0`, options)
+      .then((result) => {
+        console.log(result)
+        return result.data
+      })
+      .catch((err) => {
+        console.error(err)
+        return new Error(err)
+      })
+  })
+
   return (
     <Layout hasNavbar={isAuthenticated() === 'fundraiser' ? false : true}>
       {isAuthenticated() === 'fundraiser' ? (
@@ -59,16 +75,25 @@ function Fundraiser() {
         </Grid>
         <Dashboard
           props={
-            donationQuery?.isSuccess
+            donationQuery?.isSuccess && withdrawQuery?.isSuccess
               ? [
                   {
                     header: 'Donation',
-                    link: '/donation',
+                    link: '/fundraiser/all-donation',
                     data: [
-                      ...donationQuery.data.filter(
-                        (item) => item.user_id === userData.userId,
-                      ),
+                      ...donationQuery.data
+                        .filter((item) => item.user_id === userData.userId)
+                        .slice(0, 3),
                     ],
+                  },
+                  {
+                    header: 'Withdraw',
+                    link: '/fundraiser/withdraw',
+                    data:
+                      withdrawQuery?.data != undefined &&
+                      withdrawQuery?.data.length > 0
+                        ? [...withdrawQuery?.data]
+                        : [],
                   },
                 ]
               : [
