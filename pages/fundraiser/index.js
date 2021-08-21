@@ -26,12 +26,12 @@ function Fundraiser() {
       })
   })
 
-  const withdrawQuery = useQuery(`/wallet/withdraw?status=0`, () => {
+  const withdrawQuery = useQuery(`/wallet`, () => {
     const options = {
       method: 'GET',
     }
 
-    return request(`/wallet/withdraw?status=0`, options)
+    return request(`/wallet`, options)
       .then((result) => {
         console.log(result)
         return result.data
@@ -73,7 +73,7 @@ function Fundraiser() {
         </Grid>
         <Dashboard
           props={
-            donationQuery?.isSuccess && withdrawQuery?.isSuccess
+            donationQuery?.isSuccess && donationQuery?.data != null
               ? [
                   {
                     header: 'Donation',
@@ -83,15 +83,6 @@ function Fundraiser() {
                         .filter((item) => item.user_id === userData.userId)
                         .slice(0, 3),
                     ],
-                  },
-                  {
-                    header: 'Withdraw',
-                    link: '/fundraiser/withdraw',
-                    data:
-                      withdrawQuery?.data != undefined &&
-                      withdrawQuery?.data.length > 0
-                        ? [...withdrawQuery?.data]
-                        : [],
                   },
                 ]
               : [
@@ -103,6 +94,33 @@ function Fundraiser() {
                 ]
           }
         />
+        <Grid gap="5" width="100%">
+          <Grid
+            autoFlow="column"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Heading as="h3" fontSize="xl">
+              Withdraw
+            </Heading>
+            <Link as={NextLink} href="/admin/withdraw" passHref={true}>
+              <Button as="a" variant="outline" colorScheme="gray">
+                See all withdraw request
+              </Button>
+            </Link>
+          </Grid>
+
+          <Grid
+            templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+            gap="10"
+          >
+            {withdrawQuery?.isSuccess && withdrawQuery?.data != null
+              ? withdrawQuery.data.map((data, j) => (
+                  <div key={j}>{data.name}</div>
+                ))
+              : `No withdraw request yet`}
+          </Grid>
+        </Grid>
       </Grid>
     </Layout>
   )

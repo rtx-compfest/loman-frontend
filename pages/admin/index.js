@@ -27,12 +27,12 @@ export const Admin = () => {
       })
   })
 
-  const withdrawQuery = useQuery(`/wallet/withdraw?status=0`, () => {
+  const withdrawQuery = useQuery(`/wallet/request`, () => {
     const options = {
       method: 'GET',
     }
 
-    return request(`/wallet/withdraw?status=0`, options)
+    return request(`/wallet/request`, options)
       .then((result) => {
         return result.data
       })
@@ -68,14 +68,14 @@ export const Admin = () => {
         <Heading size="xl">Dashboard</Heading>
         <Dashboard
           props={
-            donationQuery?.isSuccess
+            donationQuery?.isSuccess && donationQuery?.data != null
               ? [
                   {
                     header: 'Donation',
                     link: '/admin/donation',
                     data: [
                       ...donationQuery.data
-                        .filter((item) => item.case === 'Pending')
+                        ?.filter((item) => item.case === 'Pending')
                         .filter((item) => {
                           if (
                             differenceInDays(
@@ -119,8 +119,10 @@ export const Admin = () => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {withdrawQuery?.isSuccess && withdrawQuery?.data?.length > 0
-              ? withdrawQuery.data.map((data, j) => <div key={j}>Hi</div>)
+            {withdrawQuery?.isSuccess && withdrawQuery?.data != null
+              ? withdrawQuery.data.map((data, j) => (
+                  <div key={j}>{data.name}</div>
+                ))
               : `No withdraw request yet`}
           </Grid>
         </Grid>
@@ -144,7 +146,7 @@ export const Admin = () => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {fundraiserQuery?.isSuccess && fundraiserQuery.data.length > 0
+            {fundraiserQuery?.isSuccess && fundraiserQuery?.data?.length > 0
               ? fundraiserQuery.data.map((data) => (
                   <FundraiserRequest key={data.id} {...data} />
                 ))

@@ -161,7 +161,7 @@ const DetailDonation = () => {
         ''
       )}
       {donationQuery.isLoading ? <div>Loading...</div> : ''}
-      {donationQuery.isSuccess ? (
+      {donationQuery.isSuccess && donationQuery?.data != null ? (
         <Grid as="main" marginBlock="85px">
           <Grid>
             <Link as={NextLink} href={backToHome(isAuthenticated())}>
