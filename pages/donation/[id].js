@@ -17,6 +17,7 @@ import {
   TabPanel,
   Box,
   Tag,
+  useDisclosure,
 } from '@chakra-ui/react'
 import {ChevronLeftIcon} from '@heroicons/react/outline'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
@@ -30,6 +31,7 @@ import backToHome from '@lib/backToHome'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
 import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
+import {Withdraw} from '@components/Pages'
 import {URL} from 'constant'
 
 const imgLoader = ({src}) => {
@@ -39,6 +41,8 @@ const imgLoader = ({src}) => {
 const DetailDonation = () => {
   const router = useRouter()
   const {request, isAuthenticated} = useAuthContext()
+  const {isOpen, onOpen, onClose} = useDisclosure()
+
   const {id} = router.query
 
   const donationQuery = useQuery(`/donation/${id}`, () => {
@@ -73,10 +77,6 @@ const DetailDonation = () => {
 
   const rejectDonation = () => {
     console.log('verify')
-  }
-
-  const withdrawDonation = () => {
-    console.log('withdraw')
   }
 
   return (
@@ -286,7 +286,7 @@ const DetailDonation = () => {
                       variant="solid"
                       width="65%"
                       isDisabled={sisaHari < 0 ? true : false}
-                      onClick={withdrawDonation}
+                      onClick={onOpen}
                     >
                       Withdraw
                     </Button>
@@ -343,6 +343,7 @@ const DetailDonation = () => {
       ) : (
         ''
       )}
+      <Withdraw id={id} isOpen={isOpen} onClose={onClose} />
     </Layout>
   )
 }
