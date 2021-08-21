@@ -23,8 +23,7 @@ export const Admin = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -38,8 +37,7 @@ export const Admin = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -53,8 +51,7 @@ export const Admin = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -122,7 +119,7 @@ export const Admin = () => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {withdrawQuery?.isSuccess && withdrawQuery.data.length > 0
+            {withdrawQuery?.isSuccess && withdrawQuery?.data?.length > 0
               ? withdrawQuery.data.map((data, j) => <div key={j}>Hi</div>)
               : `No withdraw request yet`}
           </Grid>

@@ -20,10 +20,10 @@ function Home() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
+
   return (
     <Layout hasNavbar={isAuthenticated() === 'donor' ? false : true}>
       {isAuthenticated() === 'donor' ? (
@@ -37,13 +37,13 @@ function Home() {
         <Heading size="xl">Dashboard</Heading>
         <Dashboard
           props={
-            donationQuery?.isSuccess
+            donationQuery?.isSuccess && donationQuery?.data != null
               ? [
                   {
                     header: 'Donation',
                     link: '/donation',
                     data: [
-                      ...donationQuery.data
+                      ...donationQuery?.data
                         .filter((item) => item.case === 'Verified')
                         .map((item) => {
                           // eslint-disable-next-line no-unused-vars

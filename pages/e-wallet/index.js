@@ -41,8 +41,7 @@ export const EWallet = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   }, [userData, request])
 

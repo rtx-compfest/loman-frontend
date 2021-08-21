@@ -18,8 +18,7 @@ function Donation() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -53,8 +52,8 @@ function Donation() {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {donationQuery.data
-              .filter((item) => item.case === 'Verified')
+            {donationQuery?.data
+              ?.filter((item) => item.case === 'Verified')
               .sort((a, b) => new Date(b.max_date) - new Date(a.max_date))
               .map((item) => {
                 // eslint-disable-next-line no-unused-vars

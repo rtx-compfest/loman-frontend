@@ -22,8 +22,7 @@ function Fundraiser() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -38,8 +37,7 @@ function Fundraiser() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -81,7 +79,7 @@ function Fundraiser() {
                     header: 'Donation',
                     link: '/fundraiser/all-donation',
                     data: [
-                      ...donationQuery.data
+                      ...donationQuery?.data
                         .filter((item) => item.user_id === userData.userId)
                         .slice(0, 3),
                     ],

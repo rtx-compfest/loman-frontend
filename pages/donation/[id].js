@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Image from 'next/image'
 import {useRouter} from 'next/router'
 import NextLink from 'next/link'
@@ -33,6 +34,7 @@ import {useAuthContext} from '@context/auth'
 import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
 import {Withdraw} from '@components/Pages'
 import {URL} from 'constant'
+import Alert from '@components/Alert'
 
 const imgLoader = ({src}) => {
   return src
@@ -42,6 +44,11 @@ const DetailDonation = () => {
   const router = useRouter()
   const {request, isAuthenticated} = useAuthContext()
   const {isOpen, onOpen, onClose} = useDisclosure()
+
+  const [isOpenReject, setIsOpenReject] = React.useState(false)
+
+  const onCloseReject = () => setIsOpenReject(false)
+  const onOpenReject = () => setIsOpenReject(true)
 
   const {id} = router.query
 
@@ -62,8 +69,7 @@ const DetailDonation = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -253,7 +259,8 @@ const DetailDonation = () => {
                   ) : (
                     ''
                   )}
-                  {isAuthenticated() === 'admin' ? (
+                  {isAuthenticated() === 'admin' &&
+                  donationQuery.data.case === 'Pending' ? (
                     <Button
                       colorScheme="green"
                       variant="solid"
@@ -261,20 +268,21 @@ const DetailDonation = () => {
                       isDisabled={sisaHari < 0 ? true : false}
                       onClick={verifyDonation}
                     >
-                      {donationQuery.data.case === 'Pending' ? 'Verify' : ''}
+                      Verify
                     </Button>
                   ) : (
                     ''
                   )}
-                  {isAuthenticated() === 'admin' ? (
+                  {isAuthenticated() === 'admin' &&
+                  donationQuery.data.case === 'Pending' ? (
                     <Button
                       colorScheme="red"
                       variant="solid"
                       width="50%"
                       isDisabled={sisaHari < 0 ? true : false}
-                      onClick={rejectDonation}
+                      onClick={onOpenReject}
                     >
-                      {donationQuery.data.case === 'Pending' ? 'Reject' : ''}
+                      Reject
                     </Button>
                   ) : (
                     ''
@@ -344,6 +352,13 @@ const DetailDonation = () => {
         ''
       )}
       <Withdraw id={id} isOpen={isOpen} onClose={onClose} />
+      <Alert
+        title="Donation Request"
+        isOpen={isOpenReject}
+        onClose={onCloseReject}
+        onClick={rejectDonation}
+        alert="Reject"
+      />
     </Layout>
   )
 }

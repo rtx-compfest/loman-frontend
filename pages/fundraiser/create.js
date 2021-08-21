@@ -68,7 +68,7 @@ function Create() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
+        console.error(err.message)
         toast({
           title: err.message,
           status: 'error',
