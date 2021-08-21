@@ -93,8 +93,6 @@ const TopUp = () => {
       notes: value.notes,
     }
 
-    console.log(req)
-
     topUpMutation.mutate(req)
   }
 

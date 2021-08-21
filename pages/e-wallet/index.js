@@ -38,7 +38,6 @@ export const EWallet = () => {
     request(`/user/${userData?.userId}`, options)
       .then((result) => {
         setUser(result.data)
-        console.log(result.data)
         return result.data
       })
       .catch((err) => {

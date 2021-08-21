@@ -26,7 +26,7 @@ import {ProtectedRoute} from '@components/Route'
 
 function Create() {
   const toast = useToast()
-  const {userData, request, isAuthenticated} = useAuthContext()
+  const {userData, request, isAuthenticated, getToken} = useAuthContext()
 
   const [file, setFile] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -46,8 +46,8 @@ function Create() {
       method: 'POST',
       body: formdata,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'multipart/form-data',
+        Authorization: getToken(),
       },
     }
 
