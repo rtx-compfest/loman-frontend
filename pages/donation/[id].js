@@ -99,7 +99,7 @@ const DetailDonation = () => {
             duration: 3000,
             isClosable: true,
           })
-          queryCache.invalidateQueries(`/donation_program/${id}`)
+          queryCache.invalidateQueries(`/donation/${id}`)
           router.push(`/donation/${id}`)
           setIsSubmitting(false)
           return result.data

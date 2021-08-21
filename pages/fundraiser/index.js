@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import {Grid, Heading, Button, Icon} from '@chakra-ui/react'
+import NextLink from 'next/link'
+import {Grid, Heading, Button, Icon, Link} from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
 import {useQuery} from 'react-query'
 
@@ -8,6 +8,7 @@ import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
 import {ProtectedRoute} from '@components/Route'
+import {WithdrawCard} from '@components/Card'
 
 function Fundraiser() {
   const {userData, request, isAuthenticated} = useAuthContext()
@@ -115,8 +116,8 @@ function Fundraiser() {
             gap="10"
           >
             {withdrawQuery?.isSuccess && withdrawQuery?.data != null
-              ? withdrawQuery.data.map((data, j) => (
-                  <div key={j}>{data.name}</div>
+              ? withdrawQuery.data.map((data) => (
+                  <WithdrawCard key={data?.id} {...data} />
                 ))
               : `No withdraw request yet`}
           </Grid>

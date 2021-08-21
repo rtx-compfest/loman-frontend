@@ -7,7 +7,7 @@ import {NavAdmin} from '@components/Nav'
 import {ProtectedRoute} from '@components/Route'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
-import {FundraiserRequest} from '@components/Card'
+import {FundraiserRequest, WithdrawCard} from '@components/Card'
 import differenceInDays from 'date-fns/differenceInDays'
 
 export const Admin = () => {
@@ -120,8 +120,8 @@ export const Admin = () => {
             gap="10"
           >
             {withdrawQuery?.isSuccess && withdrawQuery?.data != null
-              ? withdrawQuery.data.map((data, j) => (
-                  <div key={j}>{data.name}</div>
+              ? withdrawQuery.data.map((data) => (
+                  <WithdrawCard key={data?.donation_id} {...data} />
                 ))
               : `No withdraw request yet`}
           </Grid>
