@@ -16,17 +16,20 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react'
-import {useMutation} from 'react-query'
+import {useMutation, useQueryClient} from 'react-query'
 
 import {NavFundraiser} from '@components/Nav'
 import {useAuthContext} from '@context/auth'
 import {Layout} from '@components/Layout'
 import {DonationCategoryList} from 'constant'
 import {ProtectedRoute} from '@components/Route'
+import {useRouter} from 'next/router'
 
 function Create() {
   const toast = useToast()
+  const router = useRouter()
   const {userData, request, isAuthenticated, getToken} = useAuthContext()
+  const queryCache = useQueryClient()
 
   const [file, setFile] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -46,7 +49,6 @@ function Create() {
       method: 'POST',
       body: formdata,
       headers: {
-        'Content-Type': 'multipart/form-data',
         Authorization: getToken(),
       },
     }

@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import {Grid, Heading, Button, Icon} from '@chakra-ui/react'
+import NextLink from 'next/link'
+import {Grid, Heading, Button, Icon, Link} from '@chakra-ui/react'
 import {PlusIcon} from '@heroicons/react/outline'
 import {useQuery} from 'react-query'
 
@@ -8,6 +8,7 @@ import Dashboard from '@components/Dashboard'
 import {Layout} from '@components/Layout'
 import {useAuthContext} from '@context/auth'
 import {ProtectedRoute} from '@components/Route'
+import {WithdrawCard} from '@components/Card'
 
 function Fundraiser() {
   const {userData, request, isAuthenticated} = useAuthContext()
@@ -26,12 +27,12 @@ function Fundraiser() {
       })
   })
 
-  const withdrawQuery = useQuery(`/wallet/withdraw?status=0`, () => {
+  const withdrawQuery = useQuery(`/wallet`, () => {
     const options = {
       method: 'GET',
     }
 
-    return request(`/wallet/withdraw?status=0`, options)
+    return request(`/wallet`, options)
       .then((result) => {
         console.log(result)
         return result.data
@@ -73,7 +74,7 @@ function Fundraiser() {
         </Grid>
         <Dashboard
           props={
-            donationQuery?.isSuccess && withdrawQuery?.isSuccess
+            donationQuery?.isSuccess && donationQuery?.data != null
               ? [
                   {
                     header: 'Donation',
@@ -83,15 +84,6 @@ function Fundraiser() {
                         .filter((item) => item.user_id === userData.userId)
                         .slice(0, 3),
                     ],
-                  },
-                  {
-                    header: 'Withdraw',
-                    link: '/fundraiser/withdraw',
-                    data:
-                      withdrawQuery?.data != undefined &&
-                      withdrawQuery?.data.length > 0
-                        ? [...withdrawQuery?.data]
-                        : [],
                   },
                 ]
               : [
@@ -103,6 +95,33 @@ function Fundraiser() {
                 ]
           }
         />
+        <Grid gap="5" width="100%">
+          <Grid
+            autoFlow="column"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Heading as="h3" fontSize="xl">
+              Withdraw
+            </Heading>
+            <Link as={NextLink} href="/admin/withdraw" passHref={true}>
+              <Button as="a" variant="outline" colorScheme="gray">
+                See all withdraw request
+              </Button>
+            </Link>
+          </Grid>
+
+          <Grid
+            templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
+            gap="10"
+          >
+            {withdrawQuery?.isSuccess && withdrawQuery?.data != null
+              ? withdrawQuery.data.map((data) => (
+                  <WithdrawCard key={data?.id} {...data} />
+                ))
+              : `No withdraw request yet`}
+          </Grid>
+        </Grid>
       </Grid>
     </Layout>
   )

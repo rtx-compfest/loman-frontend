@@ -33,7 +33,7 @@ function DonationList() {
       )}
       <Grid as="main" marginBlock="85px" gap="8">
         <Heading size="xl">Donation List</Heading>
-        {donationQuery?.isSuccess ? (
+        {donationQuery?.isSuccess && donationQuery?.data != null ? (
           <Grid
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"

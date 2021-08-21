@@ -99,7 +99,7 @@ const DetailDonation = () => {
             duration: 3000,
             isClosable: true,
           })
-          queryCache.invalidateQueries(`/donation_program/${id}`)
+          queryCache.invalidateQueries(`/donation/${id}`)
           router.push(`/donation/${id}`)
           setIsSubmitting(false)
           return result.data
@@ -161,7 +161,7 @@ const DetailDonation = () => {
         ''
       )}
       {donationQuery.isLoading ? <div>Loading...</div> : ''}
-      {donationQuery.isSuccess ? (
+      {donationQuery.isSuccess && donationQuery?.data != null ? (
         <Grid as="main" marginBlock="85px">
           <Grid>
             <Link as={NextLink} href={backToHome(isAuthenticated())}>

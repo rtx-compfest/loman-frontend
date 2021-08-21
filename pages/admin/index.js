@@ -7,7 +7,7 @@ import {NavAdmin} from '@components/Nav'
 import {ProtectedRoute} from '@components/Route'
 import {useAuthContext} from '@context/auth'
 import {useQuery} from 'react-query'
-import {FundraiserRequest} from '@components/Card'
+import {FundraiserRequest, WithdrawCard} from '@components/Card'
 import differenceInDays from 'date-fns/differenceInDays'
 
 export const Admin = () => {
@@ -27,12 +27,12 @@ export const Admin = () => {
       })
   })
 
-  const withdrawQuery = useQuery(`/wallet/withdraw?status=0`, () => {
+  const withdrawQuery = useQuery(`/wallet/request`, () => {
     const options = {
       method: 'GET',
     }
 
-    return request(`/wallet/withdraw?status=0`, options)
+    return request(`/wallet/request`, options)
       .then((result) => {
         return result.data
       })
@@ -68,14 +68,14 @@ export const Admin = () => {
         <Heading size="xl">Dashboard</Heading>
         <Dashboard
           props={
-            donationQuery?.isSuccess
+            donationQuery?.isSuccess && donationQuery?.data != null
               ? [
                   {
                     header: 'Donation',
                     link: '/admin/donation',
                     data: [
                       ...donationQuery.data
-                        .filter((item) => item.case === 'Pending')
+                        ?.filter((item) => item.case === 'Pending')
                         .filter((item) => {
                           if (
                             differenceInDays(
@@ -119,8 +119,10 @@ export const Admin = () => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {withdrawQuery?.isSuccess && withdrawQuery?.data?.length > 0
-              ? withdrawQuery.data.map((data, j) => <div key={j}>Hi</div>)
+            {withdrawQuery?.isSuccess && withdrawQuery?.data != null
+              ? withdrawQuery.data.map((data) => (
+                  <WithdrawCard key={data?.donation_id} {...data} />
+                ))
               : `No withdraw request yet`}
           </Grid>
         </Grid>
@@ -144,7 +146,7 @@ export const Admin = () => {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {fundraiserQuery?.isSuccess && fundraiserQuery.data.length > 0
+            {fundraiserQuery?.isSuccess && fundraiserQuery?.data?.length > 0
               ? fundraiserQuery.data.map((data) => (
                   <FundraiserRequest key={data.id} {...data} />
                 ))
