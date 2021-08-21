@@ -10,10 +10,7 @@ const LogoutButton = ({props}) => {
 
   const handleLogout = () => {
     logout()
-
-    setTimeout(() => {
-      router.push('/sign-in')
-    }, 500)
+    router.push('/sign-in')
   }
 
   return (
