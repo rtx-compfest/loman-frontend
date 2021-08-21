@@ -18,8 +18,7 @@ function DonationList() {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 
@@ -39,8 +38,8 @@ function DonationList() {
             templateColumns="repeat(auto-fill, minmax(280px, 1fr))"
             gap="10"
           >
-            {donationQuery.data.map((item) => {
-              if (item.user_id === userData.userId) {
+            {donationQuery?.data?.map((item) => {
+              if (item.user_id === userData?.userId) {
                 return <DonationCard key={item.id} {...item} />
               }
             })}

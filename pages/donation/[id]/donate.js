@@ -48,8 +48,7 @@ export const Donate = () => {
     return request(`/donation_program/${id}`, options)
       .then((result) => result.data)
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
 

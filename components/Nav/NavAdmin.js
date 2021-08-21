@@ -26,7 +26,7 @@ const NavAdmin = () => {
         </ListItem>
         <ListItem>
           <Link href="/donation">
-            <a>Fundraising</a>
+            <a>Donation</a>
           </Link>
         </ListItem>
       </List>

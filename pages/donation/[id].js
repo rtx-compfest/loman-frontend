@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Image from 'next/image'
 import {useRouter} from 'next/router'
 import NextLink from 'next/link'
@@ -18,11 +19,12 @@ import {
   Box,
   Tag,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import {ChevronLeftIcon} from '@heroicons/react/outline'
 import {BadgeCheckIcon} from '@heroicons/react/solid'
 import differenceInDays from 'date-fns/differenceInDays'
-import {useQuery} from 'react-query'
+import {useMutation, useQuery, useQueryClient} from 'react-query'
 import {DonationCategory} from 'constant'
 
 import formatCurrency from '@lib/formatCurrency'
@@ -33,6 +35,7 @@ import {useAuthContext} from '@context/auth'
 import {NavAdmin, NavDonor, NavFundraiser} from '@components/Nav'
 import {Withdraw} from '@components/Pages'
 import {URL} from 'constant'
+import Alert from '@components/Alert'
 
 const imgLoader = ({src}) => {
   return src
@@ -40,8 +43,16 @@ const imgLoader = ({src}) => {
 
 const DetailDonation = () => {
   const router = useRouter()
-  const {request, isAuthenticated} = useAuthContext()
+  const toast = useToast()
+  const {request, isAuthenticated, getToken} = useAuthContext()
   const {isOpen, onOpen, onClose} = useDisclosure()
+  const queryCache = useQueryClient()
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [isOpenReject, setIsOpenReject] = React.useState(false)
+
+  const onCloseReject = () => setIsOpenReject(false)
+  const onOpenReject = () => setIsOpenReject(true)
 
   const {id} = router.query
 
@@ -62,21 +73,68 @@ const DetailDonation = () => {
         return result.data
       })
       .catch((err) => {
-        console.error(err)
-        return new Error(err)
+        console.error(err.message)
       })
   })
+
+  const donationStatusMutation = useMutation(
+    [`/donation_program/${id}`],
+    (data) => {
+      const options = {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: getToken(),
+        },
+      }
+
+      setIsSubmitting(true)
+
+      return request(`/donation_program/${id}`, options)
+        .then((result) => {
+          toast({
+            title: 'Set donation status is success',
+            status: 'success',
+            position: 'top',
+            duration: 3000,
+            isClosable: true,
+          })
+          queryCache.invalidateQueries(`/donation_program/${id}`)
+          router.push(`/donation/${id}`)
+          setIsSubmitting(false)
+          return result.data
+        })
+        .catch((err) => {
+          toast({
+            title: err.message,
+            status: 'error',
+            position: 'top',
+            duration: 3000,
+            isClosable: true,
+          })
+          setIsSubmitting(false)
+          return err
+        })
+    },
+  )
 
   const sisaHari = donationQuery.isSuccess
     ? differenceInDays(new Date(donationQuery.data.max_date), new Date())
     : 0
 
   const verifyDonation = () => {
-    console.log('verify')
+    const formData = new FormData()
+    formData.append('status', 1)
+
+    donationStatusMutation.mutate(formData)
   }
 
   const rejectDonation = () => {
-    console.log('verify')
+    const formData = new FormData()
+    formData.append('status', 2)
+
+    donationStatusMutation.mutate(formData)
+    onCloseReject()
   }
 
   return (
@@ -253,28 +311,32 @@ const DetailDonation = () => {
                   ) : (
                     ''
                   )}
-                  {isAuthenticated() === 'admin' ? (
+                  {isAuthenticated() === 'admin' &&
+                  donationQuery.data.case === 'Pending' ? (
                     <Button
                       colorScheme="green"
                       variant="solid"
                       width="50%"
                       isDisabled={sisaHari < 0 ? true : false}
                       onClick={verifyDonation}
+                      isLoading={isSubmitting}
                     >
-                      {donationQuery.data.case === 'Pending' ? 'Verify' : ''}
+                      Verify
                     </Button>
                   ) : (
                     ''
                   )}
-                  {isAuthenticated() === 'admin' ? (
+                  {isAuthenticated() === 'admin' &&
+                  donationQuery.data.case === 'Pending' ? (
                     <Button
                       colorScheme="red"
                       variant="solid"
                       width="50%"
                       isDisabled={sisaHari < 0 ? true : false}
-                      onClick={rejectDonation}
+                      onClick={onOpenReject}
+                      isLoading={isSubmitting}
                     >
-                      {donationQuery.data.case === 'Pending' ? 'Reject' : ''}
+                      Reject
                     </Button>
                   ) : (
                     ''
@@ -344,6 +406,13 @@ const DetailDonation = () => {
         ''
       )}
       <Withdraw id={id} isOpen={isOpen} onClose={onClose} />
+      <Alert
+        title="Donation Request"
+        isOpen={isOpenReject}
+        onClose={onCloseReject}
+        onClick={rejectDonation}
+        alert="Reject"
+      />
     </Layout>
   )
 }
